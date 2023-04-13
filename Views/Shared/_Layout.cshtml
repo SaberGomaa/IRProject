@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] Information Retrieval</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/IRProject.styles.css" asp-append-version="true" />
+    <link rel="icon" href="/Attaches/Images/icone.jpg">
+</head>
+<body style="background-color:#a4dafd">
+    <div style=" display:flex; justify-content:center ; margin-top:150px; ">
+        <div style="text-align:center ; width:100% ;width:fit-content; height:fit-content;background-color:#eee; box-shadow: 2px 2px 30px 1px rgba(0, 0, 0, 0.5);">
+            <div style="width:fit-content; ">
+                <h1 style="margin:20px">Information Retrieval Project 2023</h1>
+            </div>
+            <hr style="background-color: #001; height:3px" />
+            <div style="width:100%; display:flex;justify-content:space-around">
+                <a style="color:black; font-size:18px; text-decoration:none; padding:10px 70px;" class="btn btn-info" asp-action="indexing" asp-controller="home">Indexing</a>
+                <a style="color:black; font-size:18px; text-decoration:none; padding:10px 70px;" class="btn btn-info" asp-action="searching" asp-controller="home">Searching</a>
+            </div>
+            <hr style="background-color: #001; height:3px" />
+            <div style="height:fit-content; text-align:center; ">
+                @RenderBody()
+            </div>
+         </div>
+    </div>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container align-items-center" style="color:black;">
+            &copy; 2023 - Information Retrieval Project 2023 - 
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
