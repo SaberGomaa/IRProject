@@ -1,0 +1,46 @@
+﻿
+@{
+    Layout = null;
+    int c = 0;
+
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+@if (ViewBag.result is null)
+{
+    <h1>No Documents Have '@ViewBag.text' Word</h1>
+}
+else
+{<table class="table table-hover text-xl-center">
+        <thead>
+            <tr>
+                <th>Documents Name That Contain '@ViewBag.text' Word </th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            @foreach (var i in ViewBag.result)
+            {
+                c++;
+                <tr>
+                    <td>@i</td>
+                </tr>
+            }
+            @if (c > 0)
+            {
+                <tr>
+                    <td>Number Of Documents Which Have '@ViewBag.text' Word = @c</td>
+                </tr>
+            }
+        </tbody>
+    </table> 
+    @if (c == 0)
+    {
+        <h1 style="text-align:center">No Documents Contain '@ViewBag.text' Word</h1>
+    }
+   
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
