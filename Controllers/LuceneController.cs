@@ -27,7 +27,7 @@ namespace IRProject.Controllers
         [HttpPost]
         public IActionResult Searching(string searchtext)
         {
-            string documentsPath = "F:\\L4  S Semester\\IR\\Projects\\Project\\IRProject\\wwwroot\\Attaches\\Documents\\Documents\\";
+            string documentsPath = "C:\\Users\\saber\\OneDrive - Computer and Information Technology (Menofia University)\\Desktop\\IR\\IRProject\\wwwroot\\Attaches\\Documents\\Documents\\";
 
             var directory = FSDirectory.Open("F:\\L4  S Semester\\IR\\Projects\\Project\\IRProject\\wwwroot\\Attaches\\Documents\\");
 
@@ -37,7 +37,7 @@ namespace IRProject.Controllers
             IndexWriter writer = new IndexWriter(directory, config);
 
             // Index all text files in documents directory
-            foreach (string file in Directory.GetFiles(documentsPath, "*.txt"))
+            foreach (string file in Directory.GetFiles(documentsPath, "*.txt*"))
             {
 
                 string text = ExtractText(file);

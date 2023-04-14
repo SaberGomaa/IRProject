@@ -1,3 +1,36 @@
-﻿@foreach(var i in ViewBag.tokenz){
-    <h1>@i</h1>
+﻿@{
+    int c = 1;
+    Layout = null;
 }
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<table class="table table-hover text-xl-center">
+    <thead>
+        <tr>
+            <th>Tokenz</th>
+
+            @foreach (var n in ViewBag.docNames){
+            <th>Document @c  </th>
+            c++;
+            }
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var i in ViewBag.tokenz)
+        {
+            <tr>
+                <td>@i</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@*@foreach(var i in ViewBag.tokenz){
+    <h1>@i</h1>
+}*@

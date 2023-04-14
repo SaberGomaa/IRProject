@@ -111,6 +111,14 @@ public class TokenizationController : Controller
 
         string documentsPath = "C:\\Users\\saber\\OneDrive - Computer and Information Technology (Menofia University)\\Desktop\\IR\\IRProject\\wwwroot\\Attaches\\Documents\\Documents\\";
 
+        List<string> DocNames = new List<string>();   
+
+        foreach(string fileName in System.IO.Directory.GetFiles(documentsPath, "*.txt*")){
+            DocNames.Add(fileName);
+        }
+
+        ViewBag.docNames = DocNames;
+
         List<InputData> input = new List<InputData>
         {
             new InputData { Text =""} ,
@@ -138,14 +146,15 @@ public class TokenizationController : Controller
         // Convert the dataset to a list of TokenizedData
         List<TokenizedData> result = _mlContext.Data.CreateEnumerable<TokenizedData>(tokenizedData, reuseRowObject: false).ToList();
 
-        HashSet<string> list = new HashSet<string>();
+        List<string> list = new List<string>();
 
         foreach (var i in result)
         {
             if (i.Tokens == null) continue;
             foreach (var t in i.Tokens)
             {
-                list.Add(t.ToLower());
+                if (t[0] >= 'a' && t[0] <='z')
+                    list.Add(t.ToLower());
             }
         }
         List<string> l = list.ToList();
@@ -156,3 +165,4 @@ public class TokenizationController : Controller
         return View();
     }
 }
+
