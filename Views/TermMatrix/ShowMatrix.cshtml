@@ -1,0 +1,25 @@
+﻿
+@{
+    Layout = null;
+    int c = 1;
+}
+
+<table>
+
+@foreach (var i in ViewBag.matrix){
+    <tr>
+    @foreach(var t in i)
+    {
+            @if(t>=1)
+            {
+                    <td> 1</td>
+            }
+            else
+            {
+                <td>@t</td>
+            }
+    }
+    </tr>
+
+    }
+</table>
