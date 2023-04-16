@@ -1,0 +1,22 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<h1 class="text-center">Documents Which Contain 'Today:' Word  </h1>
+
+<table class="table tab-content">
+   
+    @foreach (var i in ViewBag.results)
+    {
+        <tr class="w-100">
+            <td class="w-100 text-center">Document @i</td>
+        </tr>
+    }
+</table>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>

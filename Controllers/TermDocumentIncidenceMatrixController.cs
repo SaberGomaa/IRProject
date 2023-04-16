@@ -8,7 +8,7 @@ namespace IRProject.Controllers
         public IActionResult Index()
         {
 
-            string documentspath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\";
+            string documentspath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section";
 
             RemoveStopWords x = new RemoveStopWords();
 
@@ -21,41 +21,44 @@ namespace IRProject.Controllers
 
             (int[,] tdim, Dictionary<string, int> termIndices) = CreateTDIM(strings, documents);
 
-            termIndices.OrderBy(x => x.Key).ToList();
-
             ViewBag.re = tdim;
             ViewBag.terms = termIndices;
 
-            for (int j = 0; j < documents.Count / 2; j++)
+            for (int j = 0; j < documents.Count; j++)
             {
                 docs.Add($"Document {j+1}");
             }
 
+            ViewBag.docsCount = docs.Count();
 
             return View();
         }
 
 
 
-        public static (int[,], Dictionary<string, int>) CreateTDIM(List<string> strings, List<string> documents)
+        public static (int[,], Dictionary<string, int>) CreateTDIM(List<string> strs, List<string> Docs)
         {
+           
             // normalize the strings and the documents
-            List<List<string>> normalizedStrings = NormalizeStrings(strings);
-            List<List<string>> normalizedDocuments = NormalizeStrings(documents);
+            List<List<string>> normalizedStrings = NormalizeStrings(strs);
+            List<List<string>> normalizedDocuments = NormalizeStrings(Docs);
 
             // create a set of all terms
-            HashSet<string> terms = new HashSet<string>();
+            HashSet<string> termss = new HashSet<string>();
             foreach (List<string> document in normalizedDocuments)
             {
-                terms.UnionWith(document);
+                termss.UnionWith(document);
             }
             foreach (List<string> stringList in normalizedStrings)
             {
-                terms.UnionWith(stringList);
+                termss.UnionWith(stringList);
             }
+            List<string> terms = termss.ToList();
+            terms.Sort();
+
 
             // create the TDIM matrix
-            int[,] tdim = new int[terms.Count, documents.Count];
+            int[,] tdim = new int[terms.Count, Docs.Count];
             Dictionary<string, int> termIndices = new Dictionary<string, int>();
             int termIndex = 0;
             foreach (string term in terms)
@@ -72,11 +75,8 @@ namespace IRProject.Controllers
                 }
                 termIndex++;
             }
-
             return (tdim, termIndices);
         }
-
-
 
         public static List<List<string>> NormalizeStrings(List<string> strings)
         {
@@ -99,11 +99,37 @@ namespace IRProject.Controllers
 
 class RemoveStopWords
 {
-    List<string> documents = new List<string>();
+
+    public List<string> GetTermsForOneDocument(string documents)
+    {
+        var terms = new HashSet<string>();
+
+        var documentTerms = documents.Split(' ');
+        foreach (var term in documentTerms)
+        {
+            if (term.Length > 0)
+            {
+                if (term[0] >= 'a' && term[0] <= 'z')
+                {
+                    terms.Add(term);
+                }
+            }
+
+        }
+
+        List<string> result = terms.ToList();
+        result.Sort();
+        return result;
+    }
+
+
 
     public List<string> Files(string documentsPath)
     {
-        foreach (string fileName in Directory.GetFiles(documentsPath, "*.txt"))
+        List<string> documents = new List<string>();
+
+        documents.Clear();
+        foreach (string fileName in Directory.GetFiles(documentsPath, "*.*"))
         {
             documents.Add(File.ReadAllText(fileName));
         }
@@ -124,23 +150,15 @@ class RemoveStopWords
             }
         }
 
-        List<string> result = terms.ToList();
-        result.Sort();
-        return result;
+       
+        return terms.ToList();
     }
 
-    public void display(HashSet<string> terms)
-    {
-        foreach (var term in terms)
-        {
-            Console.WriteLine(term);
-        }
-    }
 
     public HashSet<string> NormalizeTerms(List<string> terms)
     {
         List<string> normalizedTerms = new List<string>();
-        HashSet<string> stopWords = new HashSet<string> { "the", "and", "a" };
+        HashSet<string> stopWords = new HashSet<string> {};
 
         foreach (string term in terms)
         {
@@ -151,6 +169,7 @@ class RemoveStopWords
             if (!stopWords.Contains(normalizedTerm))
             {
                 // apply stemming or lemmatization
+                
                 // (omitted for simplicity in this example)
                 normalizedTerms.Add(normalizedTerm);
             }
