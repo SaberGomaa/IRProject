@@ -109,11 +109,11 @@ public class TokenizationController : Controller
     public IActionResult Tokenize()
     {
 
-        string documentsPath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\";
+        string documentsPath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";
 
         List<string> DocNames = new List<string>();   
 
-        foreach(string fileName in System.IO.Directory.GetFiles(documentsPath, "*.txt*")){
+        foreach(string fileName in System.IO.Directory.GetFiles(documentsPath, "*.txt")){
             DocNames.Add(fileName);
         }
 
@@ -124,7 +124,7 @@ public class TokenizationController : Controller
             new InputData { Text =""} ,
         };
 
-        foreach (string file in System.IO.Directory.GetFiles(documentsPath, "*.txt*"))
+        foreach (string file in System.IO.Directory.GetFiles(documentsPath, "*.*"))
         {
             InputData newData = new InputData();
 
@@ -146,14 +146,14 @@ public class TokenizationController : Controller
         // Convert the dataset to a list of TokenizedData
         List<TokenizedData> result = _mlContext.Data.CreateEnumerable<TokenizedData>(tokenizedData, reuseRowObject: false).ToList();
 
-        List<string> list = new List<string>();
+        HashSet<string> list = new HashSet<string>();
 
         foreach (var i in result)
         {
             if (i.Tokens == null) continue;
             foreach (var t in i.Tokens)
             {
-                if (t[0] >= 'a' && t[0] <='z')
+                if (t[0] >= 'a' && t[0] <='z' && t.Length<40 && t.Length > 2)
                     list.Add(t.ToLower());
             }
         }
