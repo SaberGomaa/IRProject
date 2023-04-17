@@ -5,6 +5,8 @@ namespace IRProject.Controllers
 {
     public class InvertedIndexController : Controller
     {
+        Dictionary<string, List<int>> xx = new Dictionary<string, List<int>>();
+
         public IActionResult Index(string searchtext)
         {
 
@@ -27,8 +29,22 @@ namespace IRProject.Controllers
 
             foreach (var document in documents)
             {
-                index.AddDocument(docID++, x.GetTermsForOneDocument(document)  );
+                 xx = index.AddDocument(docID++, x.GetTermsForOneDocument(document));
             }
+
+
+            ViewBag.index = xx;
+
+            
+                foreach(var y in xx)
+                {
+                    var ss = y.Key;
+                    foreach(var a in y.Value)
+                    {
+                        var s = a;
+                    }
+                }
+            
 
             string [] q = new[] { searchtext };
 
@@ -47,26 +63,26 @@ namespace IRProject.Controllers
             return View();
         }
 
+        public ActionResult PrintMatrix()
+        {
+
+            var i = new Inverted();
+
+            return View();
+        }
+
     }
+
+    
 
     public class Inverted
     {
         private Dictionary<string, List<int>> index = new Dictionary<string, List<int>>();
 
-        public void PrintIndex()
+       
+        public Dictionary<string, List<int>> AddDocument(int docId, List<string> terms)
         {
-            foreach (var kvp in index)
-            {
-                Console.Write($"{kvp.Key}: ");
-                foreach (var docId in kvp.Value)
-                {
-                    Console.Write($"{docId}, ");
-                }
-                Console.WriteLine();
-            }
-        }
-        public void AddDocument(int docId, List<string> terms)
-        {
+            List<Dictionary<string, List<int>>> list = new List<Dictionary<string, List<int>>>();
             foreach (string term in terms)
             {
                 if (!index.ContainsKey(term))
@@ -78,6 +94,7 @@ namespace IRProject.Controllers
                     index[term].Add(docId);
                 }
             }
+            return index;
         }
 
         public List<int> Search(string[] terms)

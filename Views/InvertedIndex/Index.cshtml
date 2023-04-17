@@ -5,6 +5,11 @@
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+
+
+
+
 <h1 class="text-center">Search Using Inverted Index</h1>
 <h1 class="text-center">Documents Which Contain '@ViewBag.word' Word  </h1>
 
@@ -23,6 +28,22 @@
     {
         <h1 style="text-align:center">No Documents Contain '@ViewBag.word' Word</h1>
     }
+    <hr /> 
+    <h1 class="text-center">Inverted Index </h1>
+    <table class="table tab-content">
+            @foreach (var y in @ViewBag.index)
+            {
+            <tr>
+                <td style="width:100px">@y.Key</td>
+                @foreach (var docId in y.Value)
+                {
+                    <td style="width:100px">@docId</td>
+                }
+             </tr>
+
+            }
+
+</table>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
