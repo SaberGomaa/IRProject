@@ -109,7 +109,7 @@ public class TokenizationController : Controller
     public IActionResult Tokenize()
     {
 
-        string documentsPath = "C:\\Users\\saber\\OneDrive - Computer and Information Technology (Menofia University)\\Desktop\\IR\\IRProject\\wwwroot\\Attaches\\Documents\\Documents\\";
+        string documentsPath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\";
 
         List<string> DocNames = new List<string>();   
 

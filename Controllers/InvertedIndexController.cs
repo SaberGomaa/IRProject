@@ -7,7 +7,7 @@ namespace IRProject.Controllers
         public IActionResult Index(string query)
         {
 
-            string documentspath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section";
+            string documentspath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";
 
             RemoveStopWords x = new RemoveStopWords();
 

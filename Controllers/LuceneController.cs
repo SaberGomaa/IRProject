@@ -28,9 +28,9 @@ namespace IRProject.Controllers
         [HttpPost]
         public IActionResult Searching(string searchtext)
         {
-            string documentsPath = "C:\\Users\\saber\\OneDrive - Computer and Information Technology (Menofia University)\\Desktop\\IR\\IRProject\\wwwroot\\Attaches\\Documents\\Documents\\section";
+            string documentsPath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";
 
-            var directory = FSDirectory.Open("C: \\Users\\saber\\OneDrive - Computer and Information Technology(Menofia University)\\Desktop\\IR\\IRProject\\wwwroot\\Attaches\\Documents\\Documents\\Lucene\\");
+            var directory = FSDirectory.Open("F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Lucene\\");
 
 
             StandardAnalyzer analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
