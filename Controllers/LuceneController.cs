@@ -20,14 +20,9 @@ namespace IRProject.Controllers
     public class LuceneController : Controller
     {
 
-        public IActionResult Searching()
-        {
-            return View();
-        }
-
-        [HttpPost]
         public IActionResult Searching(string searchtext)
         {
+
             string documentsPath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";
 
             var directory = FSDirectory.Open("F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Lucene\\");
@@ -81,8 +76,8 @@ namespace IRProject.Controllers
             ViewBag.text = searchtext;
 
             return View("LuceneResult");
-        }
 
+        }
         private string ExtractText(string file)
         {
             TextExtractor extractor = new TextExtractor();
@@ -93,10 +88,7 @@ namespace IRProject.Controllers
 
         }
 
-        public IActionResult Indexing()
-        {
-            return View();
-        }
 
     }
-}
+} 
+

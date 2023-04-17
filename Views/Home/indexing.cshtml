@@ -1,15 +1,15 @@
 ﻿
 <link rel="stylesheet" href="~/css/indexing.css" asp-append-version="true" />
-<form>
+<form method="post">
 
-</form>
+
 <div style="display:flex; justify-content:space-around">
     <h5>Choose Index</h5>
     <h5>Prepocessing</h5>
 </div>
 <div style="display:flex; justify-content:space-around">
-    <select name="index" id="index" style="height:30px">
-      <option value="lucene">Lucene</option>
+    <select name="selectedSearch" style="height:30px">
+        <option value="lucene">Lucene</option>
         <option value="term">Term Doc Incidence Matric</option>
         <option value="invert">Inverted Index</option>
         <option value="position">Positinal Index</option>
@@ -18,7 +18,7 @@
     <div style="display:flex; align-items:center; align-content:center">
   <ul style="list-style-type:none" >
             <li>
-                <input type="checkbox" /><label> Tokenization&nbsp;&nbsp;&nbsp;</label>
+                <input type="checkbox" name="tok"/><label> Tokenization&nbsp;&nbsp;&nbsp;</label>
             </li>
             <li>
                 <input type="checkbox" /><label> Normalization</label>
@@ -35,4 +35,7 @@
         </ul>
 
     </div>
-</div>
+        <input type="submit" class="btn btn-info" value="Index" />
+
+    </div>
+</form>

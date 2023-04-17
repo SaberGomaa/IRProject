@@ -1,15 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Lucene.Net.Documents;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IRProject.Controllers
 {
     public class InvertedIndexController : Controller
     {
-        public IActionResult Index(string query)
+        public IActionResult Index(string searchtext)
         {
 
             string documentspath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";
 
             RemoveStopWords x = new RemoveStopWords();
+
+            List<string> fNames = new List<string>();
+
+
+            foreach (string fileName in Directory.GetFiles(documentspath, "*.*"))
+            {
+                fNames.Add(fileName);
+            }
 
             List<string> documents = x.Files(documentspath);
 
@@ -18,10 +27,10 @@ namespace IRProject.Controllers
 
             foreach (var document in documents)
             {
-                index.AddDocument(docID++, x.GetTermsForOneDocument(document));
+                index.AddDocument(docID++, x.GetTermsForOneDocument(document)  );
             }
 
-            string [] q = new[] { query };
+            string [] q = new[] { searchtext };
 
             var result = index.Search(q);
 
@@ -33,6 +42,7 @@ namespace IRProject.Controllers
             }
 
             ViewBag.results = searchResult;
+            ViewBag.word = searchtext;
 
             return View();
         }

@@ -1,8 +1,8 @@
-﻿<form method="post">
+﻿<form method="post" >
 <div style="display:flex; justify-content:space-around ; padding:20px">
-        <input type="search" name="searchtext" placeholder="Type Here To Search" height:40px ; style="outline:none; border-radius:10px; width:300px; border:1px solid black" />
-        <select name="index" id="index" style="height:40px ;border-radius:10px; width:150px; border:1px solid black" >
-        <option value="lucene">Lucene</option>
+    <input type="search" name="searchtext" placeholder="Type Here To Search" height:40px ; style="outline:none; border-radius:10px; width:300px; border:1px solid black" />
+    <select name="selected"  style="height:40px ;border-radius:10px; width:150px; border:1px solid black">
+        <option value="lucene" >Lucene</option>
         <option value="term">Term Doc Incidence Matric</option>
         <option value="invert">Inverted Index</option>
         <option value="position">Positinal Index</option>
@@ -18,10 +18,10 @@
     </h3>
 </div>
 <div style="display:flex; justify-content:space-around; margin-bottom:20px">
-    <div><input type="checkbox" /><label> Tokenization</label></div>
-    <div><input type="checkbox" /><label> Normalization</label></div>
-    <div><input type="checkbox" /><label> Stemming</label></div>
-    <div><input type="checkbox" /><label> Stop Words</label></div>
-    <div><input type="checkbox" /><label> Lemetization</label></div>
+    <div><input type="checkbox" name="tok" /><label> Tokenization</label></div>
+    <div><input type="checkbox" name="norm" /><label> Normalization</label></div>
+    <div><input type="checkbox" name="stem"/><label> Stemming</label></div>
+    <div><input type="checkbox" name="stops"/><label> Stop Words</label></div>
+    <div><input type="checkbox" name="lemm"/><label> Lemetization</label></div>
     </div>
 </form>

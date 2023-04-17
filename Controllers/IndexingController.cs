@@ -13,6 +13,10 @@ namespace IRProject.Controllers
         {
             return View();
         }
-
+        [HttpPost]
+        public IActionResult Indexing(string selected, bool tok)
+        {
+            return View();
+        }
     }
 }

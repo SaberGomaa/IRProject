@@ -30,6 +30,31 @@ namespace IRProject.Controllers
             return RedirectToAction("indexing" , "indexing");
         }
 
+        public IActionResult Searching()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Searching(string searchtext, string selected, string tok, string norm, string lemm, string stops, string stem)
+        {
+            if (selected == "lucene")
+            {
+                return RedirectToAction("Searching", "lucene", new { searchtext = searchtext });
+            }
+            else if(selected == "term") 
+            {
+                return RedirectToAction("Searching", "lucene", new { searchtext = searchtext });
+            }
+            else if (selected == "invert")
+            {
+                return RedirectToAction("index", "InvertedIndex", new { searchtext = searchtext });
+            }
+            else
+            {
+                return View();
+            }
+        }
+
         //public IActionResult Searching()
         //{
         //    return View();
@@ -100,7 +125,7 @@ namespace IRProject.Controllers
         //    string r = System.IO.File.ReadAllText(file);
 
         //    return r;
-            
+
         //}
 
         //public IActionResult Indexing()

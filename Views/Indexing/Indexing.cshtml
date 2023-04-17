@@ -1,37 +1,41 @@
 ﻿
 <link rel="stylesheet" href="~/css/indexing.css" asp-append-version="true" />
-<form>
-</form>
-<div style="display:flex; justify-content:space-around">
-    <h5>Choose Index</h5>
-    <h5>Prepocessing</h5>
-</div>
-<div style="display:flex; justify-content:space-around">
-    <select name="index" id="index" style="height:30px">
-        <option value="lucene">Lucene</option>
-        <option value="term">Term Doc Incidence Matric</option>
-        <option value="invert">Inverted Index</option>
-        <option value="position">Positinal Index</option>
-        <option value="biword">Bi-Word Index</option>
-    </select>
-    <div style="display:flex; align-items:center; align-content:center">
-        <ul style="list-style-type:none">
-            <li>
-                <input type="checkbox" /><label> Tokenization&nbsp;&nbsp;&nbsp;</label>
-            </li>
-            <li>
-                <input type="checkbox" /><label> Normalization</label>
-            </li>
-            <li>
-                <input type="checkbox" value="s" /><label> Stemming&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-            </li>
-            <li>
-                <input type="checkbox" /><label> Lemetization&nbsp;&nbsp;</label>
-            </li>
-            <li>
-                <input type="checkbox" /><label> Stop Words&nbsp;&nbsp;&nbsp;</label>
-            </li>
-        </ul>
+<form method="post">
+
+
+    <div style="display:flex; justify-content:space-around">
+        <h5>Choose Index</h5>
+        <h5>Prepocessing</h5>
+    </div>
+    <div style="display:flex; justify-content:space-around">
+        <select name="selectedSearch" style="height:30px">
+            <option value="lucene">Lucene</option>
+            <option value="term">Term Doc Incidence Matric</option>
+            <option value="invert">Inverted Index</option>
+            <option value="position">Positinal Index</option>
+            <option value="biword">Bi-Word Index</option>
+        </select>
+        <div style="display:flex; align-items:center; align-content:center">
+            <ul style="list-style-type:none">
+                <li>
+                    <input type="checkbox" name="tok" /><label> Tokenization&nbsp;&nbsp;&nbsp;</label>
+                </li>
+                <li>
+                    <input type="checkbox" /><label> Normalization</label>
+                </li>
+                <li>
+                    <input type="checkbox" value="s" /><label> Stemming&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                </li>
+                <li>
+                    <input type="checkbox" /><label> Lemetization&nbsp;&nbsp;</label>
+                </li>
+                <li>
+                    <input type="checkbox" /><label> Stop Words&nbsp;&nbsp;&nbsp;</label>
+                </li>
+            </ul>
+
+        </div>
+        <input type="submit" class="btn btn-info" value="Index" />
 
     </div>
-</div>
+</form>
