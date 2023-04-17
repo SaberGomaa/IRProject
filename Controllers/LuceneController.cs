@@ -13,6 +13,7 @@ using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Analysis;
 using sun.swing;
 using TikaOnDotNet.TextExtraction;
+using Microsoft.VisualBasic;
 
 namespace IRProject.Controllers
 {
@@ -27,9 +28,9 @@ namespace IRProject.Controllers
         [HttpPost]
         public IActionResult Searching(string searchtext)
         {
-            string documentsPath = "C:\\Users\\saber\\OneDrive - Computer and Information Technology (Menofia University)\\Desktop\\IR\\IRProject\\wwwroot\\Attaches\\Documents\\Documents\\";
+            string documentsPath = "C:\\Users\\saber\\OneDrive - Computer and Information Technology (Menofia University)\\Desktop\\IR\\IRProject\\wwwroot\\Attaches\\Documents\\Documents\\section";
 
-            var directory = FSDirectory.Open("F:\\L4  S Semester\\IR\\Projects\\Project\\IRProject\\wwwroot\\Attaches\\Documents\\");
+            var directory = FSDirectory.Open("C: \\Users\\saber\\OneDrive - Computer and Information Technology(Menofia University)\\Desktop\\IR\\IRProject\\wwwroot\\Attaches\\Documents\\Documents\\Lucene\\");
 
 
             StandardAnalyzer analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
@@ -37,7 +38,7 @@ namespace IRProject.Controllers
             IndexWriter writer = new IndexWriter(directory, config);
 
             // Index all text files in documents directory
-            foreach (string file in Directory.GetFiles(documentsPath, "*.txt*"))
+            foreach (string file in Directory.GetFiles(documentsPath, "*.*"))
             {
 
                 string text = ExtractText(file);

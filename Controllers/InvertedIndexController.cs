@@ -4,7 +4,7 @@ namespace IRProject.Controllers
 {
     public class InvertedIndexController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(string query)
         {
 
             string documentspath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section";
@@ -21,7 +21,9 @@ namespace IRProject.Controllers
                 index.AddDocument(docID++, x.GetTermsForOneDocument(document));
             }
 
-            var result = index.Search(new[] { "what" });
+            string [] q = new[] { query };
+
+            var result = index.Search(q);
 
             List<string> searchResult= new List<string>();
 
@@ -35,10 +37,7 @@ namespace IRProject.Controllers
             return View();
         }
 
-
-
     }
-
 
     public class Inverted
     {
