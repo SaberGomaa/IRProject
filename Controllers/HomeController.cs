@@ -43,7 +43,7 @@ namespace IRProject.Controllers
             }
             else if(selected == "term") 
             {
-                return RedirectToAction("Searching", "lucene", new { searchtext = searchtext });
+                return RedirectToAction("index", "TermDocumentIncidenceMatrix", new { searchtext = searchtext });
             }
             else if (selected == "invert")
             {

@@ -4,6 +4,12 @@
 }
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
+@foreach(var i in ViewBag.r)
+{
+    <h1>@i</h1>
+}
+
+@*
 <table class="table tab-content">
     <thead class="btn-info">
         <tr>
@@ -17,14 +23,14 @@
 @foreach (KeyValuePair<string, int> termIndex in ViewBag.terms)
     {
         <tr>
-    <td>@termIndex.Key</td>
+            <td>@termIndex.Key</td>
             @for (int j = 0; j < ViewBag.docsCount; j++)
-    {
-        <td>@ViewBag.re[termIndex.Value, j] </td>
-    }
+            {
+                <td>@ViewBag.re[termIndex.Value, j] </td>
+            }
         </tr>
     }
-</table>
+</table>*@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>

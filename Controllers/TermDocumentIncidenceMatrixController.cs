@@ -5,35 +5,118 @@ namespace IRProject.Controllers
 {
     public class TermDocumentIncidenceMatrixController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(string searchtext)
         {
 
-            string documentspath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";
-
+            string documentsPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section";
             RemoveStopWords x = new RemoveStopWords();
 
-            //{ "hello world", "goodbye world", "hello goodbye" }  { "hello there", "goodbye for now", "hello again" }
-            List<string> strings = x.NormalizeTerms(x.GetTerms(x.Files(documentspath))).ToList();
-            strings.Sort();   
-            List<string> documents = x.Files(documentspath);
 
-            List<string> docs = new List<string>();
+            // Define the list of documents and terms
+            List<string> documents = x.Files(documentsPath);
 
-            (int[,] tdim, Dictionary<string, int> termIndices) = CreateTDIM(strings, documents);
+            //List<string> documents = new List<string> { "saber elsayed saber"  , "saner maher elsayed saber", "saner maher elsayed saber" };
 
-            ViewBag.re = tdim;
-            ViewBag.terms = termIndices;
+            HashSet<string> terms = new HashSet<string>();
 
-            for (int j = 0; j < documents.Count; j++)
+            foreach (string document in documents)
             {
-                docs.Add($"Document {j+1}");
+                string[] words = document.Split(' ');
+
+                // Convert the words to lowercase and store them in a list of terms
+                foreach (string w in words)
+                {
+                    string term = w.ToLower();
+                    terms.Add(term);
+                }
             }
 
-            ViewBag.docsCount = docs.Count();
+            List<string> termes = terms.ToList();
+
+            // Create the incidence matrix
+            int[,] incidenceMatrix = new int[termes.Count, documents.Count];
+            for (int i = 0; i < documents.Count; i++)
+            {
+                string document = documents[i];
+                string[] words = document.Split(' ');
+
+                for (int j = 0; j < termes.Count; j++)
+                {
+                    string term = termes[j];
+                    int count = 0;
+
+                    foreach (string w in words)
+                    {
+                        if (w == term)
+                        {
+                            count = 1;
+                        }
+                    }
+
+                    incidenceMatrix[j, i] = count;
+                }
+            }
+
+            //for (int i = 0; i < termes.Count; i++)
+            //{
+            //    Console.Write(termes[i] + ": ");
+            //    for (int j = 0; j < documents.Count; j++)
+            //    {
+            //        Console.Write(incidenceMatrix[i, j] + " ");
+            //    }
+            //    Console.WriteLine();
+            //}
+
+            // Search for a specific word
+            List<int> r = new List<int>();
+            int wordIndex = termes.IndexOf(searchtext);
+            if (wordIndex != -1)
+            {
+                //Console.Write("Document ");
+
+                for (int i = 0; i < documents.Count; i++)
+                {
+                    if (incidenceMatrix[wordIndex, i] > 0)
+                    {
+                        r.Add(i + 1);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Not Found");
+            }
+
+            ViewBag.r = r;
+
+
+            //string documentspath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";
+
+            //RemoveStopWords x = new RemoveStopWords();
+
+            ////{ "hello world", "goodbye world", "hello goodbye" }  { "hello there", "goodbye for now", "hello again" }
+            //List<string> strings = x.NormalizeTerms(x.GetTerms(x.Files(documentspath))).ToList();
+            //strings.Sort();   
+            //List<string> documents = x.Files(documentspath);
+
+            //List<string> docs = new List<string>();
+
+            //(int[,] tdim, Dictionary<string, int> termIndices) = CreateTDIM(strings, documents);
+
+
+
+            //ViewBag.re = tdim;
+            //ViewBag.terms = termIndices;
+
+            //for (int j = 0; j < documents.Count; j++)
+            //{
+            //    docs.Add($"Document {j+1}");
+            //}
+
+            //ViewBag.docsCount = docs.Count();
 
             return View();
         }
-
 
 
         public static (int[,], Dictionary<string, int>) CreateTDIM(List<string> strs, List<string> Docs)
