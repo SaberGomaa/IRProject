@@ -49,6 +49,14 @@ namespace IRProject.Controllers
             {
                 return RedirectToAction("index", "InvertedIndex", new { searchtext = searchtext });
             }
+            else if (selected == "position")
+            {
+                return RedirectToAction("index", "PositionalIndex", new { searchtext = searchtext });
+            }
+            else if (selected == "biword")
+            {
+                return RedirectToAction("index", "BiWordIndex", new { searchtext = searchtext });
+            }
             else
             {
                 return View();
