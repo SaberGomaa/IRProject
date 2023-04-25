@@ -214,7 +214,7 @@ class RemoveStopWords
         documents.Clear();
         foreach (string fileName in Directory.GetFiles(documentsPath, "*.*"))
         {
-            documents.Add(File.ReadAllText(fileName));
+            documents.Add(File.ReadAllText(fileName).ToLower());
         }
         return documents.ToList();
     }
