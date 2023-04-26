@@ -1,14 +1,17 @@
 ﻿
 <link rel="stylesheet" href="~/css/indexing.css" asp-append-version="true" />
 <form method="post">
-
+    <div style="width:100%; display:flex;justify-content:space-around">
+        <a style="color:black;  width:100%; margin:20px; font-size:18px; text-decoration:none; padding:10px 70px;" class="btn btn-info" asp-action="searching" asp-controller="Home">Searching</a>
+    </div>
+    <hr style="background-color: #001; height:3px" />
 
     <div style="display:flex; justify-content:space-around">
         <h5>Choose Index</h5>
         <h5>Prepocessing</h5>
     </div>
     <div style="display:flex; justify-content:space-around">
-        <select name="selectedSearch" style="height:30px">
+        <select name="selectedSearch" style="height:40px ;border-radius:10px; width:200px; border:1px solid black">
             <option value="lucene">Lucene</option>
             <option value="term">Term Doc Incidence Matric</option>
             <option value="invert">Inverted Index</option>

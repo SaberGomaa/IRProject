@@ -87,7 +87,9 @@ namespace IRProject.Controllers
                 Console.WriteLine("Not Found");
             }
 
-            ViewBag.r = r;
+            ViewBag.word = searchtext;
+
+            ViewBag.result = r;
 
 
             //string documentspath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";

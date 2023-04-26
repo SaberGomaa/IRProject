@@ -37,9 +37,29 @@ namespace IRProject.Controllers
         [HttpPost]
         public IActionResult Searching(string searchtext, string selected, string tok, string norm, string lemm, string stops, string stem)
         {
+
+            List<string> searchtexts = new List<string>();
+
+            searchtexts = searchtext.ToLower().Split(' ').ToList();
+
+            List<string> strings= new List<string>();
+            List<string> boolWords = new List<string>();
+
+            foreach(var i in searchtexts)
+            {
+                if(i == "and" || i == "or" || i == "not")
+                {
+                    boolWords.Add(i);
+                }
+                else
+                {
+                    strings.Add(i);
+                }
+            }
+
             if (selected == "lucene")
             {
-                return RedirectToAction("Searching", "lucene", new { searchtext = searchtext });
+                return RedirectToAction("Searching", "lucene", new { searchtext = strings , boolwords = boolWords });
             }
             else if(selected == "term") 
             {

@@ -20,7 +20,7 @@ namespace IRProject.Controllers
     public class LuceneController : Controller
     {
 
-        public IActionResult Searching(string searchtext)
+        public IActionResult Searching(List<string> searchtext , List<string> boolWords)
         {
 
             string documentsPath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";
@@ -55,7 +55,7 @@ namespace IRProject.Controllers
             QueryParser parser = new QueryParser(LuceneVersion.LUCENE_48, "content", queryAnalyzer);
 
 
-            Query query = parser.Parse(searchtext);
+            Query query = parser.Parse(searchtext.FirstOrDefault());
 
             HashSet<string> list = new HashSet<string>();
 
