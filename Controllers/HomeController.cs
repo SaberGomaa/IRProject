@@ -38,6 +38,7 @@ namespace IRProject.Controllers
         public IActionResult Searching(string searchtext, string selected, string tok, string norm, string lemm, string stops, string stem)
         {
 
+
             List<string> searchtexts = new List<string>();
 
             searchtexts = searchtext.ToLower().Split(' ').ToList();
@@ -59,23 +60,23 @@ namespace IRProject.Controllers
 
             if (selected == "lucene")
             {
-                return RedirectToAction("Searching", "lucene", new { searchtext = strings , boolwords = boolWords });
+                return RedirectToAction("Searching", "lucene", new { searchtext = strings , boolwords = boolWords , norm = norm , lemm = lemm , stops = stops , stem = stem});
             }
             else if(selected == "term") 
             {
-                return RedirectToAction("index", "TermDocumentIncidenceMatrix", new { searchtext = searchtext });
+                return RedirectToAction("index", "TermDocumentIncidenceMatrix", new { searchtext = searchtext, norm = norm, lemm = lemm, stops = stops, stem = stem });
             }
             else if (selected == "invert")
             {
-                return RedirectToAction("index", "InvertedIndex", new { searchtext = searchtext });
+                return RedirectToAction("index", "InvertedIndex", new { searchtext = searchtext, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
             }
             else if (selected == "position")
             {
-                return RedirectToAction("index", "PositionalIndex", new { searchtext = searchtext });
+                return RedirectToAction("index", "PositionalIndex", new { searchtext = searchtext, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
             }
             else if (selected == "biword")
             {
-                return RedirectToAction("index", "BiWordIndex", new { searchtext = searchtext });
+                return RedirectToAction("index", "BiWordIndex", new { searchtext = searchtext, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
             }
             else
             {

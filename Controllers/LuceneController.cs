@@ -14,65 +14,74 @@ using Lucene.Net.Analysis;
 using sun.swing;
 using TikaOnDotNet.TextExtraction;
 using Microsoft.VisualBasic;
+using Porter2Stemmer;
+using System.Text.RegularExpressions;
+using Porter2Stemmer;
+
+using Lucene.Net.Analysis;
+using Lucene.Net.Documents;
+using Lucene.Net.Index;
+using Lucene.Net.Search;
+using Lucene.Net.Store;
+using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Util;
+using Lucene.Net.QueryParsers.Classic;
+using System.IO;
 
 namespace IRProject.Controllers
 {
     public class LuceneController : Controller
     {
 
-        public IActionResult Searching(List<string> searchtext , List<string> boolWords)
+        public IActionResult Searching(List<string> searchtext , List<string> boolWords, string tok, string norm, string lemm, string stops, string stem)
         {
 
-            string documentsPath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";
+            string dirPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\after";
 
-            var directory = FSDirectory.Open("F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Lucene\\");
+            // Create index
+            Lucene.Net.Store.Directory dir = FSDirectory.Open(dirPath);
+            Lucene.Net.Analysis.Analyzer analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
+            IndexWriterConfig iwc = new IndexWriterConfig(LuceneVersion.LUCENE_48, analyzer);
+            IndexWriter iw = new IndexWriter(dir, iwc);
 
-
-            StandardAnalyzer analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
-            IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, analyzer);
-            IndexWriter writer = new IndexWriter(directory, config);
-
-            // Index all text files in documents directory
-            foreach (string file in Directory.GetFiles(documentsPath, "*.*"))
+            // Add documents from directory
+            foreach (string file in System.IO.Directory.GetFiles(dirPath, "*.txt*"))
             {
-
-                string text = ExtractText(file);
                 Document doc = new Document();
+                doc.Add(new TextField("content", System.IO.File.ReadAllText(file), Field.Store.YES));
                 doc.Add(new TextField("filename", Path.GetFileName(file), Field.Store.YES));
-                doc.Add(new TextField("content", text, Field.Store.YES));
-                writer.AddDocument(doc);
+
+                iw.AddDocument(doc);
             }
 
-            writer.Commit();
-            writer.Dispose();
+            iw.Commit();
+            iw.Dispose();
 
-            // Create index searcher
-            IndexReader reader = DirectoryReader.Open(directory);
+
+
+            // Get query from user
+            string query = searchtext.ToString();
+
+            // Search 
+            QueryParser parser = new QueryParser(LuceneVersion.LUCENE_48, "content", analyzer);
+            Query q = parser.Parse(searchtext.FirstOrDefault());
+            IndexReader reader = DirectoryReader.Open(dir);
             IndexSearcher searcher = new IndexSearcher(reader);
+            TopDocs results = searcher.Search(q, 10);
 
-            // Create search query
-            StandardAnalyzer queryAnalyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
-            QueryParser parser = new QueryParser(LuceneVersion.LUCENE_48, "content", queryAnalyzer);
-
-
-            Query query = parser.Parse(searchtext.FirstOrDefault());
-
-            HashSet<string> list = new HashSet<string>();
-
-            // Execute search and display results
-            TopDocs results = searcher.Search(query, 10);
-            //Console.WriteLine("Found {0} documents matching the query '{1}':", results.TotalHits, query.ToString());
+            // Display results
+            HashSet<string> keys = new HashSet<string>();
             foreach (ScoreDoc scoreDoc in results.ScoreDocs)
             {
                 Document doc = searcher.Doc(scoreDoc.Doc);
-                //Console.WriteLine(" - {0} ({1})", doc.Get("filename"), scoreDoc.Score);
-                list.Add(doc.Get("filename"));
+                keys.Add(doc.Get("filename"));
             }
 
-            // Close index reader
+        
             reader.Dispose();
+            dir.Dispose();
 
-            ViewBag.result = list;
+            ViewBag.result = keys;
             ViewBag.text = searchtext;
 
             return View("LuceneResult");
@@ -90,5 +99,62 @@ namespace IRProject.Controllers
 
 
     }
-} 
+}
 
+class Operations
+{
+    public List<string> StemDocuments(List<string> documents)
+    {
+
+        List<string> result = new List<string>();
+
+        for (int i = 0; i < documents.Count; i++)
+        {
+
+            string text = documents[i];
+            var stemmer = new EnglishPorter2Stemmer();
+            string[] words = text.Split(' ');
+            string stemmedText = string.Empty;
+
+            foreach (string word in words)
+            {
+                word.ToLower();
+                if (word.Length > 0 && word.Length < 15 && word[0] >= 'a' && word[0] <= 'z')
+                {
+                    stemmedText += stemmer.Stem(word).Value + " ";
+                }
+            }
+
+            result.Add(stemmedText.Trim());
+
+        }
+
+        return result;
+    }
+    public List<string> StemOneDocument(string document)
+    {
+
+        List<string> result = new List<string>();
+
+
+        string text = document;
+        var stemmer = new EnglishPorter2Stemmer();
+        string[] words = text.Split(' ');
+        string stemmedText = string.Empty;
+
+        foreach (string word in words)
+        {
+            word.ToLower();
+            if (word.Length > 0 && word.Length < 15 && word[0] >= 'a' && word[0] <= 'z')
+            {
+                stemmedText += stemmer.Stem(word).Value + " ";
+            }
+        }
+
+        result.Add(stemmedText.Trim());
+
+
+
+        return result;
+    }
+}

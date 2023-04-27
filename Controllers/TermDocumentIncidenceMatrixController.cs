@@ -184,7 +184,102 @@ namespace IRProject.Controllers
 
 class RemoveStopWords
 {
+    List<string> documents = new List<string>();
 
+    public List<string> StopWords(List<string> documents)
+    {
+        HashSet<string> stopWords = new HashSet<string> { "the", "and", "a", "of", "an", "as", "with", "at", "yes", "yet", "you" };
+        HashSet<string> ReTerms = new HashSet<string>();
+
+        foreach (var t in documents)
+        {
+            if (!stopWords.Contains(t) && !t.Contains("\n") && !t.Contains("\t") && t.Length > 2)
+            {
+                ReTerms.Add(t);
+            }
+        }
+
+        return ReTerms.ToList();
+    }
+
+    public List<string> StopWordsOneDocument(string document)
+    {
+        HashSet<string> stopWords = new HashSet<string> { "the", "and", "a", "of", "an", "as", "with", "at", "yes", "yet", "you" };
+        HashSet<string> ReTerms = new HashSet<string>();
+
+        string[] terms = document.Split(' ');
+
+        foreach (var t in terms)
+        {
+            if (!stopWords.Contains(t) && !t.Contains("\n") && !t.Contains("\t") && t.Length > 2)
+            {
+                ReTerms.Add(t);
+            }
+        }
+
+        return ReTerms.ToList();
+    }
+
+    public List<string> NormalizeDocuments(List<string> documents)
+    {
+        List<string> result = new List<string>();
+
+        foreach (string document in documents)
+        {
+            string outputWord = Regex.Replace(document, @"[\p{P}\d]", "");
+
+            result.Add(outputWord);
+        }
+        return result;
+    }
+
+
+    public List<string> NormalizeOneDocument(string document)
+    {
+        List<string> result = new List<string>();
+
+        string[] terms = document.Split(' ');
+
+        foreach (string t in terms)
+        {
+            string outputWord = Regex.Replace(t, @"[\p{P}\d]", "");
+
+            result.Add(outputWord);
+        }
+        return result;
+    }
+
+    public List<string> Files(string documentsPath)
+    {
+        foreach (string fileName in Directory.GetFiles(documentsPath, "*.*"))
+        {
+            documents.Add(File.ReadAllText(fileName).ToLower());
+        }
+        return documents.ToList();
+    }
+    public List<string> GetTerms(List<string> documents)
+    {
+        var terms = new HashSet<string>();
+
+        foreach (var document in documents)
+        {
+            var documentTerms = document.Split(' ');
+            foreach (var term in documentTerms)
+            {
+                if (term.Length > 0)
+                {
+                    if (term[0] >= 'a' && term[0] <= 'z')
+                    {
+                        terms.Add(term);
+                    }
+                }
+            }
+        }
+
+        List<string> result = terms.ToList();
+        result.Sort();
+        return result;
+    }
     public List<string> GetTermsForOneDocument(string documents)
     {
         var terms = new HashSet<string>();
@@ -206,64 +301,127 @@ class RemoveStopWords
         result.Sort();
         return result;
     }
-
-
-
-    public List<string> Files(string documentsPath)
+    public void display(HashSet<string> terms)
     {
-        List<string> documents = new List<string>();
-
-        documents.Clear();
-        foreach (string fileName in Directory.GetFiles(documentsPath, "*.*"))
+        foreach (var term in terms)
         {
-            documents.Add(File.ReadAllText(fileName).ToLower());
+            Console.WriteLine(term);
         }
-        return documents.ToList();
     }
 
+    //public HashSet<string> NormalizeTerms(List<string> terms)
+    //{
+    //    List<string> normalizedTerms = new List<string>();
+    //    HashSet<string> stopWords = new HashSet<string> { "the", "and", "a" , "of" , "an"};
 
-    public List<string> GetTerms(List<string> documents)
-    {
-        var terms = new HashSet<string>();
+    //    foreach (var t in terms)
+    //    {
+    //        string[] strings = t.Split(' ');
+    //        foreach (string term in strings)
+    //        {
+    //            // convert to lowercase and remove punctuation
+    //            string normalizedTerm = Regex.Replace(term.ToLower(), @"[\p{P}\p{S}]", "");
 
-        foreach (var document in documents)
-        {
-            var documentTerms = document.Split(' ');
-            foreach (var term in documentTerms)
-            {
-                terms.Add(term);
-            }
-        }
+    //            // remove stop words
+    //            if (!stopWords.Contains(normalizedTerm))
+    //            {
+    //                // apply stemming or lemmatization
+    //                // (omitted for simplicity in this example)
+    //                normalizedTerms.Add(normalizedTerm);
+    //            }
+    //        }
+    //    }
 
-       
-        return terms.ToList();
-    }
+    //    // remove digits
+    //    HashSet<string> filteredStrings = normalizedTerms.Where(s => !s.Any(char.IsDigit)&& !s.Any(char.IsWhiteSpace)).ToHashSet();
 
-
-    public HashSet<string> NormalizeTerms(List<string> terms)
-    {
-        List<string> normalizedTerms = new List<string>();
-        HashSet<string> stopWords = new HashSet<string> {};
-
-        foreach (string term in terms)
-        {
-            // convert to lowercase and remove punctuation
-            string normalizedTerm = Regex.Replace(term.ToLower(), @"[\p{P}\p{S}]", "");
-
-            // remove stop words
-            if (!stopWords.Contains(normalizedTerm))
-            {
-                // apply stemming or lemmatization
-                
-                // (omitted for simplicity in this example)
-                normalizedTerms.Add(normalizedTerm);
-            }
-        }
-
-        // remove digits
-        HashSet<string> filteredStrings = normalizedTerms.Where(s => !s.Any(char.IsDigit) && !s.Any(char.IsWhiteSpace)).ToHashSet();
-
-        return filteredStrings;
-    }
+    //    return filteredStrings;
+    //}
 
 }
+
+//class RemoveStopWords
+//{
+
+//    public List<string> GetTermsForOneDocument(string documents)
+//    {
+//        var terms = new HashSet<string>();
+
+//        var documentTerms = documents.Split(' ');
+//        foreach (var term in documentTerms)
+//        {
+//            if (term.Length > 0)
+//            {
+//                if (term[0] >= 'a' && term[0] <= 'z')
+//                {
+//                    terms.Add(term);
+//                }
+//            }
+
+//        }
+
+//        List<string> result = terms.ToList();
+//        result.Sort();
+//        return result;
+//    }
+
+
+
+//    public List<string> Files(string documentsPath)
+//    {
+//        List<string> documents = new List<string>();
+
+//        documents.Clear();
+//        foreach (string fileName in Directory.GetFiles(documentsPath, "*.*"))
+//        {
+//            documents.Add(File.ReadAllText(fileName).ToLower());
+//        }
+//        return documents.ToList();
+//    }
+
+
+//    public List<string> GetTerms(List<string> documents)
+//    {
+//        var terms = new HashSet<string>();
+
+//        foreach (var document in documents)
+//        {
+//            var documentTerms = document.Split(' ');
+//            foreach (var term in documentTerms)
+//            {
+//                terms.Add(term);
+//            }
+//        }
+
+
+//        return terms.ToList();
+//    }
+
+
+//    public HashSet<string> NormalizeTerms(List<string> terms)
+//    {
+//        List<string> normalizedTerms = new List<string>();
+//        HashSet<string> stopWords = new HashSet<string> {};
+
+//        foreach (string term in terms)
+//        {
+//            // convert to lowercase and remove punctuation
+//            string normalizedTerm = Regex.Replace(term.ToLower(), @"[\p{P}\p{S}]", "");
+
+//            // remove stop words
+//            if (!stopWords.Contains(normalizedTerm))
+//            {
+//                // apply stemming or lemmatization
+//                term
+//                // (omitted for simplicity in this example)
+//                normalizedTerms.Add(normalizedTerm);
+//            }
+//        }
+
+//        // remove digits
+//        HashSet<string> filteredStrings = normalizedTerms.Where(s => !s.Any(char.IsDigit) && !s.Any(char.IsWhiteSpace)).ToHashSet();
+
+//        return filteredStrings;
+//    }
+
+//}
