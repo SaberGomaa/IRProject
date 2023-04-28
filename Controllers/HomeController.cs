@@ -39,9 +39,8 @@ namespace IRProject.Controllers
         {
 
 
-            List<string> searchtexts = new List<string>();
 
-            searchtexts = searchtext.ToLower().Split(' ').ToList();
+            List<string> searchtexts = searchtext.ToLower().Split(' ').ToList();
 
             List<string> strings= new List<string>();
             List<string> boolWords = new List<string>();
@@ -60,7 +59,7 @@ namespace IRProject.Controllers
 
             if (selected == "lucene")
             {
-                return RedirectToAction("Searching", "lucene", new { searchtext = strings , boolwords = boolWords , norm = norm , lemm = lemm , stops = stops , stem = stem});
+                return RedirectToAction("Searching", "lucene", new { searchtext = searchtext , boolwords = boolWords, tok = tok, norm = norm, lemm = lemm , stops = stops , stem = stem});
             }
             else if(selected == "term") 
             {

@@ -1,42 +1,37 @@
-﻿using IRProject.Models;
-using Lucene.Net.Analysis.Standard;
+﻿using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Index;
-using Lucene.Net.QueryParsers;
 using Lucene.Net.Documents;
 using Lucene.Net.Search;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using Directory = System.IO.Directory;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
 using Lucene.Net.QueryParsers.Classic;
-using Lucene.Net.Analysis;
-using sun.swing;
 using TikaOnDotNet.TextExtraction;
-using Microsoft.VisualBasic;
 using Porter2Stemmer;
-using System.Text.RegularExpressions;
-using Porter2Stemmer;
-
-using Lucene.Net.Analysis;
-using Lucene.Net.Documents;
-using Lucene.Net.Index;
-using Lucene.Net.Search;
-using Lucene.Net.Store;
-using Lucene.Net.Analysis.Standard;
-using Lucene.Net.Util;
-using Lucene.Net.QueryParsers.Classic;
-using System.IO;
 
 namespace IRProject.Controllers
 {
     public class LuceneController : Controller
     {
 
-        public IActionResult Searching(List<string> searchtext , List<string> boolWords, string tok, string norm, string lemm, string stops, string stem)
+        public IActionResult Searching(string searchtext , List<string> boolWords, string tok, string norm, string lemm, string stops, string stem)
         {
 
-            string dirPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\after";
+            List<string> searchterms = new List<string>();
+            string operators = "";
+
+            foreach (string word in searchtext.Split(' '))
+            {
+                word.ToLower();
+                if(word == "and" || word == "or" || word == "not") operators = word;
+                else searchterms.Add(word);
+            }
+
+            string dirPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\lucene";
+
+            Operations op = new Operations();
+
+            RemoveStopWords stopWords= new RemoveStopWords();
 
             // Create index
             Lucene.Net.Store.Directory dir = FSDirectory.Open(dirPath);
@@ -45,10 +40,29 @@ namespace IRProject.Controllers
             IndexWriter iw = new IndexWriter(dir, iwc);
 
             // Add documents from directory
-            foreach (string file in System.IO.Directory.GetFiles(dirPath, "*.txt*"))
+            foreach (string file in System.IO.Directory.GetFiles(dirPath, "CISI*"))
             {
                 Document doc = new Document();
-                doc.Add(new TextField("content", System.IO.File.ReadAllText(file), Field.Store.YES));
+                string text = System.IO.File.ReadAllText(file);
+                string output = text;
+
+                //if(tok == "on")
+                //{
+                //    output = stopWords.GetTermsForOneDocument(output);
+                //}
+                //if(norm == "on")
+                //{
+                //    output = stopWords.NormalizeOneDocument(output);
+                //}
+                //if(stem == "on")
+                //{
+                //    output =  op.StemOneDocument(output);
+                //}
+                //if (stops == "on")
+                //{
+                //    output = stopWords.StopWordsOneDocumentLucene(output);
+                //}
+                doc.Add(new TextField("content", text, Field.Store.YES));
                 doc.Add(new TextField("filename", Path.GetFileName(file), Field.Store.YES));
 
                 iw.AddDocument(doc);
@@ -57,31 +71,88 @@ namespace IRProject.Controllers
             iw.Commit();
             iw.Dispose();
 
+            Dictionary<string , int> re = new Dictionary<string, int>();
 
-
-            // Get query from user
-            string query = searchtext.ToString();
-
-            // Search 
-            QueryParser parser = new QueryParser(LuceneVersion.LUCENE_48, "content", analyzer);
-            Query q = parser.Parse(searchtext.FirstOrDefault());
-            IndexReader reader = DirectoryReader.Open(dir);
-            IndexSearcher searcher = new IndexSearcher(reader);
-            TopDocs results = searcher.Search(q, 10);
-
-            // Display results
-            HashSet<string> keys = new HashSet<string>();
-            foreach (ScoreDoc scoreDoc in results.ScoreDocs)
+            foreach(var i in System.IO.Directory.GetFiles(dirPath, "CISI*"))
             {
-                Document doc = searcher.Doc(scoreDoc.Doc);
-                keys.Add(doc.Get("filename"));
+                re.Add(Path.GetFileName(i) , 0);
             }
 
-        
-            reader.Dispose();
+            foreach (var st in searchterms)
+            {
+                // Search 
+                QueryParser parser = new QueryParser(LuceneVersion.LUCENE_48, "content", analyzer);
+
+                Query q = parser.Parse(st);
+                IndexReader reader = DirectoryReader.Open(dir);
+                IndexSearcher searcher = new IndexSearcher(reader);
+                TopDocs results = searcher.Search(q, 10);
+                HashSet<string> keys = new HashSet<string>();
+
+                // Display results
+                foreach (ScoreDoc scoreDoc in results.ScoreDocs)
+                {
+                    Document doc = searcher.Doc(scoreDoc.Doc);
+                    keys.Add(doc.Get("filename"));
+                }
+
+                foreach (var i in keys)
+                {
+                    re[i]++;
+                }
+
+            }
+
+
+
+            List<string > result = new List<string>();
+
+            if(operators == "")
+            {
+                foreach (var i in re)
+                {
+                    if (i.Value >= 1)
+                    {
+                        result.Add(i.Key);
+                    }
+                }
+            }
+
+            if(operators == "and")
+            {
+                foreach(var i in re)
+                {
+                    if(i.Value >= 2)
+                    {
+                        result.Add(i.Key);
+                    }
+                }
+            }
+            if (operators == "or")
+            {
+                foreach (var i in re)
+                {
+                    if (i.Value >= 1)
+                    {
+                        result.Add(i.Key);
+                    }
+                }
+            }
+
+            List<string> operations = new List<string>();
+            if (tok == "on") operations.Add("Tokenization");
+            if (norm == "on") operations.Add("Normalization");
+            if (stops == "on") operations.Add("Remove Stop Words");
+            if (lemm == "on") operations.Add("Lemmetization");
+            if (stem == "on") operations.Add("Stemming");
+
+            ViewBag.operations = operations;
+
             dir.Dispose();
 
-            ViewBag.result = keys;
+            ViewBag.result = result;
+
+
             ViewBag.text = searchtext;
 
             return View("LuceneResult");
@@ -89,7 +160,6 @@ namespace IRProject.Controllers
         }
         private string ExtractText(string file)
         {
-            TextExtractor extractor = new TextExtractor();
 
             string r = System.IO.File.ReadAllText(file);
 
@@ -131,10 +201,8 @@ class Operations
 
         return result;
     }
-    public List<string> StemOneDocument(string document)
+    public string StemOneDocument(string document)
     {
-
-        List<string> result = new List<string>();
 
 
         string text = document;
@@ -151,9 +219,7 @@ class Operations
             }
         }
 
-        result.Add(stemmedText.Trim());
-
-
+        string result = stemmedText;
 
         return result;
     }

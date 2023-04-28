@@ -219,7 +219,23 @@ class RemoveStopWords
 
         return ReTerms.ToList();
     }
+    public string StopWordsOneDocumentLucene(string document)
+    {
+        HashSet<string> stopWords = new HashSet<string> { "the", "and", "a", "of", "an", "as", "with", "at", "yes", "yet", "you" };
+        string ReTerms = "";
 
+        string[] terms = document.Split(' ');
+
+        foreach (var t in terms)
+        {
+            if (!stopWords.Contains(t) && !t.Contains("\n") && !t.Contains("\t") && t.Length > 2)
+            {
+                ReTerms+= t +" ";
+            }
+        }
+
+        return ReTerms;
+    }
     public List<string> NormalizeDocuments(List<string> documents)
     {
         List<string> result = new List<string>();
@@ -234,9 +250,9 @@ class RemoveStopWords
     }
 
 
-    public List<string> NormalizeOneDocument(string document)
+    public string NormalizeOneDocument(string document)
     {
-        List<string> result = new List<string>();
+        string result = "";
 
         string[] terms = document.Split(' ');
 
@@ -244,7 +260,7 @@ class RemoveStopWords
         {
             string outputWord = Regex.Replace(t, @"[\p{P}\d]", "");
 
-            result.Add(outputWord);
+            result += " " + t;
         }
         return result;
     }
@@ -280,7 +296,7 @@ class RemoveStopWords
         result.Sort();
         return result;
     }
-    public List<string> GetTermsForOneDocument(string documents)
+    public List<string> GetTermsForOneDocumentInverted(string documents)
     {
         var terms = new HashSet<string>();
 
@@ -301,7 +317,29 @@ class RemoveStopWords
         result.Sort();
         return result;
     }
-    public void display(HashSet<string> terms)
+
+    public string GetTermsForOneDocument(string documents)
+    {
+        var terms = new HashSet<string>();
+
+        var documentTerms = documents.Split(' ');
+        foreach (var term in documentTerms)
+        {
+            if (term.Length > 0)
+            {
+                if (term[0] >= 'a' && term[0] <= 'z')
+                {
+                    terms.Add(term);
+                }
+            }
+
+        }
+
+        string result = terms.ToString();
+
+        return result;
+    }
+        public void display(HashSet<string> terms)
     {
         foreach (var term in terms)
         {

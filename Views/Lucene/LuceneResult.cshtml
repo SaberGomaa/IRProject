@@ -2,15 +2,23 @@
 @{
     Layout = null;
     int c = 0;
-
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <h1 class="text-center">Search Using Lucene</h1>
+<hr/>
+<h1 class="text-center"> Operations  </h1>
+
+@foreach (var o in ViewBag.operations)
+{
+    <h5 class="text-center">@o</h5>
+}
+
+
 
 @if (ViewBag.result is null)
 {
-    <h1>No Documents Have '@ViewBag.text' Word</h1>
+    <h1  class="text-center">No Documents Have '@ViewBag.text' Word</h1>
 }
 else
 {<table class="table table-hover text-xl-center">
@@ -20,7 +28,7 @@ else
             </tr>
         </thead>
         <tbody>
-            
+
             @foreach (var i in ViewBag.result)
             {
                 c++;

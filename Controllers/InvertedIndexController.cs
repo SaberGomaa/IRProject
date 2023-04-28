@@ -29,7 +29,7 @@ namespace IRProject.Controllers
 
             foreach (var document in documents)
             {
-                 xx = index.AddDocument(docID++, x.GetTermsForOneDocument(document));
+                 xx = index.AddDocument(docID++,x.GetTermsForOneDocumentInverted(document));
             }
 
 
