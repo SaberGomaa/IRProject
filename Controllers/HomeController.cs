@@ -43,13 +43,13 @@ namespace IRProject.Controllers
             List<string> searchtexts = searchtext.ToLower().Split(' ').ToList();
 
             List<string> strings= new List<string>();
-            List<string> boolWords = new List<string>();
+            string boolWords = "";
 
             foreach(var i in searchtexts)
             {
                 if(i == "and" || i == "or" || i == "not")
                 {
-                    boolWords.Add(i);
+                    boolWords = i;
                 }
                 else
                 {
@@ -59,23 +59,23 @@ namespace IRProject.Controllers
 
             if (selected == "lucene")
             {
-                return RedirectToAction("Searching", "lucene", new { searchtext = searchtext , boolwords = boolWords, tok = tok, norm = norm, lemm = lemm , stops = stops , stem = stem});
+                return RedirectToAction("Searching", "lucene", new { searchtext = strings , boolwords = boolWords, tok = tok, norm = norm, lemm = lemm , stops = stops , stem = stem});
             }
             else if(selected == "term") 
             {
-                return RedirectToAction("index", "TermDocumentIncidenceMatrix", new { searchtext = searchtext, norm = norm, lemm = lemm, stops = stops, stem = stem });
+                return RedirectToAction("index", "TermDocumentIncidenceMatrix", new { searchtext = strings, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
             }
             else if (selected == "invert")
             {
-                return RedirectToAction("index", "InvertedIndex", new { searchtext = searchtext, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
+                return RedirectToAction("index", "InvertedIndex", new { searchtext = strings, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
             }
             else if (selected == "position")
             {
-                return RedirectToAction("index", "PositionalIndex", new { searchtext = searchtext, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
+                return RedirectToAction("index", "PositionalIndex", new { searchtext = strings, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
             }
             else if (selected == "biword")
             {
-                return RedirectToAction("index", "BiWordIndex", new { searchtext = searchtext, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
+                return RedirectToAction("index", "BiWordIndex", new { searchtext = strings, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
             }
             else
             {

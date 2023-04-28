@@ -57,6 +57,9 @@ namespace IRProject.Controllers
                 }
             }
 
+            ViewBag.terms = incidenceMatrix;
+
+
             //for (int i = 0; i < termes.Count; i++)
             //{
             //    Console.Write(termes[i] + ": ");
@@ -242,13 +245,20 @@ class RemoveStopWords
 
         foreach (string document in documents)
         {
-            string outputWord = Regex.Replace(document, @"[\p{P}\d]", "");
+            string[] terms = document.Split(' ');
 
-            result.Add(outputWord);
+            foreach (string t in terms)
+            {
+                //string outputWord = Regex.Replace(t, @"[\p{P}\d]", "");
+                string outputWord = Regex.Replace(t, @"\b\w*\d\w*\b", "");
+                if (outputWord.Length > 2 )
+                {
+                    result.Add(outputWord);
+                }
+            }
         }
         return result;
     }
-
 
     public string NormalizeOneDocument(string document)
     {
@@ -267,11 +277,12 @@ class RemoveStopWords
 
     public List<string> Files(string documentsPath)
     {
-        foreach (string fileName in Directory.GetFiles(documentsPath, "*.*"))
+        List<string> docu = new List<string>();
+        foreach (string fileName in Directory.GetFiles(documentsPath, "CISI.*"))
         {
-            documents.Add(File.ReadAllText(fileName).ToLower());
+            docu.Add(File.ReadAllText(fileName).ToLower());
         }
-        return documents.ToList();
+        return docu.ToList();
     }
     public List<string> GetTerms(List<string> documents)
     {

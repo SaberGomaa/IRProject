@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<table class="table tab-content">
+    <thead class="btn-info">
+        <tr>
+            <td>Terms</td>
+            @for (int i = 1; i <= ViewBag.docsCount; i++)
+            {
+                <td>Document @i</td>
+            }
+        </tr>
+    </thead>
+    @foreach (KeyValuePair<string, int> termIndex in ViewBag.terms)
+    {
+        <tr>
+            <td>@termIndex.Key</td>
+            @for (int j = 0; j < ViewBag.docsCount; j++)
+            {
+                <td>@ViewBag.re[termIndex.Value, j] </td>
+            }
+        </tr>
+    }
+</table>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>

@@ -14,18 +14,12 @@ namespace IRProject.Controllers
     public class LuceneController : Controller
     {
 
-        public IActionResult Searching(string searchtext , List<string> boolWords, string tok, string norm, string lemm, string stops, string stem)
+        public IActionResult Searching(List<string> searchtext , string boolWords, string tok, string norm, string lemm, string stops, string stem)
         {
 
             List<string> searchterms = new List<string>();
-            string operators = "";
+            string operators = boolWords;
 
-            foreach (string word in searchtext.Split(' '))
-            {
-                word.ToLower();
-                if(word == "and" || word == "or" || word == "not") operators = word;
-                else searchterms.Add(word);
-            }
 
             string dirPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\lucene";
 
@@ -78,7 +72,7 @@ namespace IRProject.Controllers
                 re.Add(Path.GetFileName(i) , 0);
             }
 
-            foreach (var st in searchterms)
+            foreach (var st in searchtext)
             {
                 // Search 
                 QueryParser parser = new QueryParser(LuceneVersion.LUCENE_48, "content", analyzer);
