@@ -18,13 +18,15 @@ namespace IRProject.Controllers
         public IActionResult Searching(string t, List<string> searchtext , string boolWords, string tok, string norm, string lemm, string stops, string stem)
         {
 
+            allPre a = new allPre();
+            var dict = a.Indexing("lucene", tok, norm, lemm, stops, stem);
+
             List<string> searchterms = new List<string>();
             string operators = boolWords;
 
             indexingQRY indexingQRY = new indexingQRY();
 
-            var dict = indexingQRY.docs();
-
+            
             string dirPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\lucene";
 
             Operations op = new Operations();

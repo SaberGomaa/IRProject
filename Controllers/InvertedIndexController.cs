@@ -16,7 +16,9 @@ namespace IRProject.Controllers
 
             var index = new Inverted();
 
-            var dict = indexingQRY.docs();
+            allPre a = new allPre();
+            var dict = a.Indexing("lucene", tok, norm, lemm, stops, stem);
+
             foreach (var document in dict)
             {
                  xx = index.AddDocument(document.Key,x.GetTermsForOneDocumentInverted(document.Value));

@@ -4,12 +4,13 @@ namespace IRProject.Controllers
 {
     public class PositionalIndexController : Controller
     {
-        public IActionResult Index(string searchtext)
+        public IActionResult Index(string t, List<string> searchtext, string boolWords, string tok, string norm, string lemm, string stops, string stem)
         {
 
             indexingQRY indexingQRY = new indexingQRY();
 
-            var dict = indexingQRY.docs();
+            allPre a = new allPre();
+            var dict = a.Indexing("lucene", tok, norm, lemm, stops, stem);
 
             var po = new PositionalIndex();
             int i = 1;
@@ -19,7 +20,7 @@ namespace IRProject.Controllers
             }
            
             var query = new string[] {};
-            query = searchtext.Split(' ');
+            query = t.Split(' ');
             var docNums = po.Search(query);
 
             ViewBag.result = docNums;

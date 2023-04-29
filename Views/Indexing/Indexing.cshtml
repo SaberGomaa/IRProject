@@ -1,17 +1,13 @@
 ﻿
 <link rel="stylesheet" href="~/css/indexing.css" asp-append-version="true" />
 <form method="post">
-    <div style="width:100%; display:flex;justify-content:space-around">
-        <a style="color:black;  width:100%; margin:20px; font-size:18px; text-decoration:none; padding:10px 70px;" class="btn btn-info" asp-action="searching" asp-controller="Home">Searching</a>
-    </div>
-    <hr style="background-color: #001; height:3px" />
-
+    
     <div style="display:flex; justify-content:space-around">
         <h5>Choose Index</h5>
         <h5>Prepocessing</h5>
     </div>
     <div style="display:flex; justify-content:space-around">
-        <select name="selectedSearch" style="height:40px ;border-radius:10px; width:200px; border:1px solid black">
+        <select name="selected" style="height:40px ;border-radius:10px; width:200px; border:1px solid black">
             <option value="lucene">Lucene</option>
             <option value="term">Term Doc Incidence Matric</option>
             <option value="invert">Inverted Index</option>
@@ -24,20 +20,26 @@
                     <input type="checkbox" name="tok" /><label> Tokenization&nbsp;&nbsp;&nbsp;</label>
                 </li>
                 <li>
-                    <input type="checkbox" /><label> Normalization</label>
+                    <input type="checkbox" name="norm"/><label> Normalization</label>
                 </li>
                 <li>
-                    <input type="checkbox" value="s" /><label> Stemming&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <input type="checkbox" name="stem" /><label> Stemming&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                 </li>
                 <li>
-                    <input type="checkbox" /><label> Lemetization&nbsp;&nbsp;</label>
+                    <input type="checkbox" name="lemm"/><label> Lemetization&nbsp;&nbsp;</label>
                 </li>
                 <li>
-                    <input type="checkbox" /><label> Stop Words&nbsp;&nbsp;&nbsp;</label>
+                    <input type="checkbox" name="stops"/><label> Stop Words&nbsp;&nbsp;&nbsp;</label>
                 </li>
             </ul>
 
         </div>
 
     </div>
+    <hr style="background-color: #001; height:3px" />
+
+    <div style="width:100%; display:flex;justify-content:space-around">
+        <input type="submit" style="color:black;  width:100%; margin:20px; font-size:18px; text-decoration:none; padding:10px 70px;" class="btn btn-info" value="Index And Go To Search" />
+    </div>
+
 </form>

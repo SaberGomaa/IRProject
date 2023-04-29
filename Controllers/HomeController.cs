@@ -20,13 +20,12 @@ namespace IRProject.Controllers
 
         public IActionResult Searching()
         {
+            
             return View();
         }
         [HttpPost]
         public IActionResult Searching(string searchtext, string selected, string tok, string norm, string lemm, string stops, string stem)
         {
-
-
 
             List<string> searchtexts = searchtext.ToLower().Split(' ').ToList();
 

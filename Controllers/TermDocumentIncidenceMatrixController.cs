@@ -13,7 +13,8 @@ namespace IRProject.Controllers
             indexingQRY indexingQRY = new indexingQRY();
             RemoveStopWords removeStop = new RemoveStopWords();
 
-            var dict = indexingQRY.docs();
+            allPre a = new allPre();
+            var dict = a.Indexing("lucene", tok, norm, lemm, stops, stem);
 
             // Sample documents
             List<string> documents = new List<string>();

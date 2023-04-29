@@ -8,7 +8,8 @@ namespace IRProject.Controllers
         {
             indexingQRY indexingQRY = new indexingQRY();
 
-            var dict = indexingQRY.docs();
+            allPre a = new allPre();
+            var dict = a.Indexing("invert", tok, norm, lemm, stops, stem);
 
             List<string> documents = new List<string>();
             foreach (var i in dict)
