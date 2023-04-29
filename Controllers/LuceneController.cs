@@ -8,18 +8,22 @@ using Lucene.Net.Util;
 using Lucene.Net.QueryParsers.Classic;
 using TikaOnDotNet.TextExtraction;
 using Porter2Stemmer;
+using org.apache.poi.ss.formula.functions;
 
 namespace IRProject.Controllers
 {
     public class LuceneController : Controller
     {
 
-        public IActionResult Searching(List<string> searchtext , string boolWords, string tok, string norm, string lemm, string stops, string stem)
+        public IActionResult Searching(string t, List<string> searchtext , string boolWords, string tok, string norm, string lemm, string stops, string stem)
         {
 
             List<string> searchterms = new List<string>();
             string operators = boolWords;
 
+            indexingQRY indexingQRY = new indexingQRY();
+
+            var dict = indexingQRY.docs();
 
             string dirPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\lucene";
 
@@ -34,30 +38,40 @@ namespace IRProject.Controllers
             IndexWriter iw = new IndexWriter(dir, iwc);
 
             // Add documents from directory
-            foreach (string file in System.IO.Directory.GetFiles(dirPath, "CISI*"))
+            //foreach (string file in System.IO.Directory.GetFiles(dirPath, "CISI*"))
+            //{
+            //    Document doc = new Document();
+            //    string text = System.IO.File.ReadAllText(file);
+            //    string output = text;
+
+            //    //if(tok == "on")
+            //    //{
+            //    //    output = stopWords.GetTermsForOneDocument(output);
+            //    //}
+            //    //if(norm == "on")
+            //    //{
+            //    //    output = stopWords.NormalizeOneDocument(output);
+            //    //}
+            //    //if(stem == "on")
+            //    //{
+            //    //    output =  op.StemOneDocument(output);
+            //    //}
+            //    //if (stops == "on")
+            //    //{
+            //    //    output = stopWords.StopWordsOneDocumentLucene(output);
+            //    //}
+            //    doc.Add(new TextField("content", text, Field.Store.YES));
+            //    doc.Add(new TextField("filename", Path.GetFileName(file), Field.Store.YES));
+
+            //    iw.AddDocument(doc);
+            //}
+
+            foreach (var file in dict)
             {
                 Document doc = new Document();
-                string text = System.IO.File.ReadAllText(file);
-                string output = text;
-
-                //if(tok == "on")
-                //{
-                //    output = stopWords.GetTermsForOneDocument(output);
-                //}
-                //if(norm == "on")
-                //{
-                //    output = stopWords.NormalizeOneDocument(output);
-                //}
-                //if(stem == "on")
-                //{
-                //    output =  op.StemOneDocument(output);
-                //}
-                //if (stops == "on")
-                //{
-                //    output = stopWords.StopWordsOneDocumentLucene(output);
-                //}
-                doc.Add(new TextField("content", text, Field.Store.YES));
-                doc.Add(new TextField("filename", Path.GetFileName(file), Field.Store.YES));
+              
+                doc.Add(new TextField("content", file.Value, Field.Store.YES));
+                doc.Add(new TextField("filename",file.Key.ToString(), Field.Store.YES));
 
                 iw.AddDocument(doc);
             }
@@ -67,9 +81,9 @@ namespace IRProject.Controllers
 
             Dictionary<string , int> re = new Dictionary<string, int>();
 
-            foreach(var i in System.IO.Directory.GetFiles(dirPath, "CISI*"))
+            foreach(var i in dict)
             {
-                re.Add(Path.GetFileName(i) , 0);
+                re.Add(i.Key.ToString() , 0);
             }
 
             foreach (var st in searchtext)
@@ -101,7 +115,7 @@ namespace IRProject.Controllers
 
             List<string > result = new List<string>();
 
-            if(operators == "")
+            if(operators == null)
             {
                 foreach (var i in re)
                 {
@@ -147,7 +161,7 @@ namespace IRProject.Controllers
             ViewBag.result = result;
 
 
-            ViewBag.text = searchtext;
+            ViewBag.text = t;
 
             return View("LuceneResult");
 
@@ -218,3 +232,46 @@ class Operations
         return result;
     }
 }
+class indexingQRY
+{
+    public Dictionary<int, string> docs()
+    {
+        string dirPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section\\CISI.QRY";
+        string dirPath2 = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section\\CISI.ALL";
+
+        string text = File.ReadAllText(dirPath);
+        text += File.ReadAllText(dirPath2);
+
+        string[] files = new string[] { };
+
+        files = text.Split(".I");
+
+        List<int> l = new List<int>();
+
+        Dictionary<int, string> dict = new Dictionary<int, string>();
+        int c = 0;
+
+        foreach (string file in files)
+        {
+            string s = "";
+            if (file.Length > 0)
+            {
+                for (int i = 1; i < file.Length; i++)
+                {
+                    if (file[i] >= '0' && file[i] <= '9')
+                        s += file[i];
+                    else
+                        break;
+                }
+                if (s != "")
+                    l.Add(int.Parse(s));
+
+            }
+            dict.Add(c++, file);
+
+        }
+        return dict;
+    }
+
+}
+

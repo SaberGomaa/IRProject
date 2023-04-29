@@ -6,49 +6,73 @@ namespace IRProject.Controllers
     public class InvertedIndexController : Controller
     {
         Dictionary<string, List<int>> xx = new Dictionary<string, List<int>>();
-
-        public IActionResult Index(string searchtext)
+        public IActionResult Index(string t,List<string> searchtext, string boolWords, string tok, string norm, string lemm, string stops, string stem)
         {
 
-            string documentspath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";
+            string operators = boolWords;
 
             RemoveStopWords x = new RemoveStopWords();
-
-            List<string> fNames = new List<string>();
-
-
-            foreach (string fileName in Directory.GetFiles(documentspath, "*.*"))
-            {
-                fNames.Add(fileName);
-            }
-
-            List<string> documents = x.Files(documentspath);
+            indexingQRY indexingQRY = new indexingQRY();
 
             var index = new Inverted();
-            int docID = 1;
 
-            foreach (var document in documents)
+            var dict = indexingQRY.docs();
+            foreach (var document in dict)
             {
-                 xx = index.AddDocument(docID++,x.GetTermsForOneDocumentInverted(document));
+                 xx = index.AddDocument(document.Key,x.GetTermsForOneDocumentInverted(document.Value));
             }
 
+            Dictionary<int, int> r = new Dictionary<int, int>();
 
-            ViewBag.index = xx;
+            for (int i = 0; i <= dict.Count; i++)
+            {
+                r[i] = 0;
+            }
 
-            
-                foreach(var y in xx)
+            List<int> result = new List<int>();
+            List<int> res = new List<int>();
+
+            foreach (string q in searchtext)
+            {
+                string[] s = { q };
+                res = index.Search(s);
+
+                foreach (var i in res)
                 {
-                    var ss = y.Key;
-                    foreach(var a in y.Value)
+                    r[i]++;
+                }
+            }
+            if (operators == null)
+            {
+                foreach (var i in r)
+                {
+                    if (i.Value >= 1)
                     {
-                        var s = a;
+                        result.Add(i.Key);
                     }
                 }
-            
+            }
 
-            string [] q = new[] { searchtext };
-
-            var result = index.Search(q);
+            if (operators == "and")
+            {
+                foreach (var i in r)
+                {
+                    if (i.Value >= 2)
+                    {
+                        result.Add(i.Key);
+                    }
+                }
+            }
+            if (operators == "or")
+            {
+                foreach (var i in r)
+                {
+                    if (i.Value >= 1)
+                    {
+                        result.Add(i.Key);
+                    }
+                }
+            }
 
             List<string> searchResult= new List<string>();
 
@@ -58,28 +82,21 @@ namespace IRProject.Controllers
             }
 
             ViewBag.results = searchResult;
-            ViewBag.word = searchtext;
+            ViewBag.word = t;
 
             return View();
         }
 
         public ActionResult PrintMatrix()
         {
-
             var i = new Inverted();
-
             return View();
         }
-
     }
-
-    
 
     public class Inverted
     {
         private Dictionary<string, List<int>> index = new Dictionary<string, List<int>>();
-
-       
         public Dictionary<string, List<int>> AddDocument(int docId, List<string> terms)
         {
             List<Dictionary<string, List<int>>> list = new List<Dictionary<string, List<int>>>();
@@ -121,5 +138,4 @@ namespace IRProject.Controllers
             return result ?? new List<int>();
         }
     }
-
 }

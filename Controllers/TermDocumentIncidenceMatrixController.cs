@@ -1,98 +1,284 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using com.sun.org.apache.regexp.@internal;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 
 namespace IRProject.Controllers
 {
     public class TermDocumentIncidenceMatrixController : Controller
     {
-        public IActionResult Index(string searchtext)
+        public IActionResult Index(string t, List<string> searchtext, string boolWords, string tok, string norm, string lemm, string stops, string stem)
         {
+            string operators = boolWords;
 
-            string documentsPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section";
-            RemoveStopWords x = new RemoveStopWords();
+            indexingQRY indexingQRY = new indexingQRY();
+            RemoveStopWords removeStop = new RemoveStopWords();
+
+            var dict = indexingQRY.docs();
+
+            // Sample documents
+            List<string> documents = new List<string>();
+
+            foreach (var i in dict)
+            {
+                string s = removeStop.NormalizeOneDocument(i.Value);
+                documents.Add(i.Value.ToLower());
+            }
 
 
-            // Define the list of documents and terms
-            List<string> documents = x.Files(documentsPath);
-
-            //List<string> documents = new List<string> { "saber elsayed saber"  , "saner maher elsayed saber", "saner maher elsayed saber" };
-
+            // Get unique terms
             HashSet<string> terms = new HashSet<string>();
-
-            foreach (string document in documents)
+            foreach (string doc in documents)
             {
-                string[] words = document.Split(' ');
-
-                // Convert the words to lowercase and store them in a list of terms
-                foreach (string w in words)
+                string[] words = doc.Split(' ');
+                foreach (string word in words)
                 {
-                    string term = w.ToLower();
-                    terms.Add(term);
+                    terms.Add(word);
                 }
             }
 
-            List<string> termes = terms.ToList();
-
-            // Create the incidence matrix
-            int[,] incidenceMatrix = new int[termes.Count, documents.Count];
-            for (int i = 0; i < documents.Count; i++)
+            // Create term-document incidence matrix
+            int[,] matrix = new int[terms.Count, documents.Count];
+            for (int j = 0; j < documents.Count; j++)
             {
-                string document = documents[i];
-                string[] words = document.Split(' ');
-
-                for (int j = 0; j < termes.Count; j++)
+                string[] words = documents[j].Split(' ');
+                for (int i = 0; i < terms.Count; i++)
                 {
-                    string term = termes[j];
-                    int count = 0;
-
-                    foreach (string w in words)
+                    if (Array.IndexOf(words, terms.ElementAt(i)) >= 0)
                     {
-                        if (w == term)
-                        {
-                            count = 1;
-                        }
+                        matrix[i, j] = 1;
                     }
-
-                    incidenceMatrix[j, i] = count;
                 }
             }
 
-            ViewBag.terms = incidenceMatrix;
+            // Search for a word and print document IDs
+            Dictionary<int, int> keyValuePairs = new Dictionary<int, int>();
+            for (int i = 0; i <= dict.Count; i++)
+            {
+                keyValuePairs.Add(i, 0);
+            }
+
+            foreach (string searchWord in searchtext)
+            {
+
+                int rowIndex = -1;
+                for (int i = 0; i < terms.Count; i++)
+                {
+                    if (terms.ElementAt(i) == searchWord)
+                    {
+                        rowIndex = i;
+                        break;
+                    }
+                }
+
+                List<int> r = new List<int>();
+
+                for (int j = 0; j < documents.Count; j++)
+                {
+                    if (matrix[rowIndex, j] == 1)
+                    {
+                        r.Add((j));
+                    }
+                }
+
+                foreach(var i in r)
+                {
+                    keyValuePairs[i] ++;
+                }
+
+            }
+
+            List<int> result = new List<int>();
+
+            if (operators == null)
+            {
+                foreach (var i in keyValuePairs)
+                {
+                    if (i.Value >= 1)
+                    {
+                        result.Add(i.Key);
+                    }
+                }
+            }
+
+            if (operators == "and")
+            {
+                foreach (var i in keyValuePairs)
+                {
+                    if (i.Value >= 2)
+                    {
+                        result.Add(i.Key);
+                    }
+                }
+            }
+            if (operators == "or")
+            {
+                foreach (var i in keyValuePairs)
+                {
+                    if (i.Value >= 1)
+                    {
+                        result.Add(i.Key);
+                    }
+                }
+            }
 
 
-            //for (int i = 0; i < termes.Count; i++)
+
+            // Print matrix
+            //Console.WriteLine("Term-Document Incidence Matrix:");
+            //Console.Write("\t");
+            //for (int j = 0; j < documents.Count; j++)
             //{
-            //    Console.Write(termes[i] + ": ");
+            //    Console.Write("D" + (j + 1) + "\t");
+            //}
+            //Console.WriteLine();
+            //for (int i = 0; i < terms.Count; i++)
+            //{
+            //    Console.Write(terms.ElementAt(i) + "\t");
             //    for (int j = 0; j < documents.Count; j++)
             //    {
-            //        Console.Write(incidenceMatrix[i, j] + " ");
+            //        Console.Write(matrix[i, j] + "\t");
             //    }
             //    Console.WriteLine();
             //}
 
-            // Search for a specific word
-            List<int> r = new List<int>();
-            int wordIndex = termes.IndexOf(searchtext);
-            if (wordIndex != -1)
-            {
-                //Console.Write("Document ");
 
-                for (int i = 0; i < documents.Count; i++)
-                {
-                    if (incidenceMatrix[wordIndex, i] > 0)
-                    {
-                        r.Add(i + 1);
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("Not Found");
-            }
+            ViewBag.result = result;
 
-            ViewBag.word = searchtext;
+            //string operators = boolWords;
 
-            ViewBag.result = r;
+            //indexingQRY indexingQRY = new indexingQRY();
+
+            //var dict = indexingQRY.docs();
+
+            //string documentsPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section";
+            //RemoveStopWords x = new RemoveStopWords();
+
+
+            //// Define the list of documents and terms
+            //List<string> documents = new List<string>();
+            ////List<string> documents = x.Files(documentsPath);
+
+            //foreach(var d in dict)
+            //{
+            //    documents.Add(d.Value);
+            //}
+
+            ////List<string> documents = new List<string> { "saber elsayed saber"  , "saner maher elsayed saber", "saner maher elsayed saber" };
+
+            //HashSet<string> terms = new HashSet<string>();
+
+            //foreach (string document in documents)
+            //{
+            //    string[] words = document.Split(' ');
+            //    string term = "";
+            //    // Convert the words to lowercase and store them in a list of terms
+            //    foreach (string w in words)
+            //    {
+            //        term = w.ToLower();
+            //        terms.Add(term);
+            //    }
+            //}
+
+            //List<string> termes = terms.ToList();
+
+            //// Create the incidence matrix
+            //int[,] incidenceMatrix = new int[termes.Count, documents.Count];
+            //for (int i = 0; i < documents.Count; i++)
+            //{
+            //    string document = documents[i];
+            //    string[] words = document.Split(' ');
+
+            //    for (int j = 0; j < termes.Count; j++)
+            //    {
+            //        string term = termes[j];
+            //        int count = 0;
+
+            //        foreach (string w in words)
+            //        {
+            //            if (w == term)
+            //            {
+            //                count = 1;
+            //            }
+            //        }
+
+            //        incidenceMatrix[j, i] = count;
+            //    }
+            //}
+
+            //ViewBag.terms = incidenceMatrix;
+
+
+            ////for (int i = 0; i < termes.Count; i++)
+            ////{
+            ////    Console.Write(termes[i] + ": ");
+            ////    for (int j = 0; j < documents.Count; j++)
+            ////    {
+            ////        Console.Write(incidenceMatrix[i, j] + " ");
+            ////    }
+            ////    Console.WriteLine();
+            ////}
+
+            //// Search for a specific word
+
+            //Dictionary<int , int> r = new Dictionary<int, int>();
+
+            //for(int i = 1; i<=3; i++)
+            //{
+            //    r[i] = 0;
+            //}
+
+            //foreach (string word in searchtext)
+            //{
+            //    int wordIndex = termes.IndexOf(word);
+            //    if (wordIndex != -1)
+            //    {
+            //        for (int i = 1; i <= 3; i++)
+            //        {
+            //            if (incidenceMatrix[wordIndex, i-1] > 0)
+            //            {
+            //                r[i]++;
+            //            }
+            //        }
+            //    }
+            //}
+
+            //List<int> result = new List<int>();
+
+            //if (operators == null)
+            //{
+            //    foreach (var i in r)
+            //    {
+            //        if (i.Value >= 1)
+            //        {
+            //            result.Add(i.Key);
+            //        }
+            //    }
+            //}
+
+            //if (operators == "and")
+            //{
+            //    foreach (var i in r)
+            //    {
+            //        if (i.Value >= 2)
+            //        {
+            //            result.Add(i.Key);
+            //        }
+            //    }
+            //}
+            //if (operators == "or")
+            //{
+            //    foreach (var i in r)
+            //    {
+            //        if (i.Value >= 1)
+            //        {
+            //            result.Add(i.Key);
+            //        }
+            //    }
+            //}
+
+            ViewBag.word = t;
+
+            //ViewBag.result = result;
 
 
             //string documentspath = "F:\\L4  S Semester\\Projects\\IR\\wwwroot\\Attaches\\Documents\\Documents\\Section\\";

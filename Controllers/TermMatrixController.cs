@@ -12,10 +12,21 @@ namespace IRProject.Controllers
 
             RemoveStopWords x = new RemoveStopWords();
 
+            indexingQRY indexingQRY = new indexingQRY();
+
+            var dict = indexingQRY.docs();
+
+
             //{ "hello world", "goodbye world", "hello goodbye" }  { "hello there", "goodbye for now", "hello again" }
-            List<string> strings = x.NormalizeDocuments(x.GetTerms(x.Files(documentspath))).ToList();
+            List<string> strings = new List<string>();
+
+            foreach(var d in dict)
+            {
+                strings.Add(d.Value);
+            }
+
             strings.Sort();
-            List<string> documents = x.Files(documentspath);
+            List<string> documents = strings;
 
             List<string> docs = new List<string>();
 

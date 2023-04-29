@@ -7,17 +7,17 @@ namespace IRProject.Controllers
         public IActionResult Index(string searchtext)
         {
 
-            string documentsPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section";
-            RemoveStopWords x = new RemoveStopWords();
+            indexingQRY indexingQRY = new indexingQRY();
 
-            List<string> documents = x.Files(documentsPath);
+            var dict = indexingQRY.docs();
 
             var po = new PositionalIndex();
-            po.AddDocument(1, documents[0]);
-            po.AddDocument(2, documents[1]);
-            po.AddDocument(3, documents[2]);
-            po.AddDocument(4, documents[3]);
-
+            int i = 1;
+            foreach(var d in dict)
+            {
+                po.AddDocument(i++, d.Value);
+            }
+           
             var query = new string[] {};
             query = searchtext.Split(' ');
             var docNums = po.Search(query);

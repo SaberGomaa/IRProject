@@ -4,21 +4,44 @@ namespace IRProject.Controllers
 {
     public class BiWordIndexController : Controller
     {
-        public IActionResult Index(string searchtext)
+        public IActionResult Index(string t, List<string> searchtext, string boolWords, string tok, string norm, string lemm, string stops, string stem)
         {
-            string documentsPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section";
-            RemoveStopWords x = new RemoveStopWords();
+            indexingQRY indexingQRY = new indexingQRY();
 
-            List<string> documents = x.Files(documentsPath);
+            var dict = indexingQRY.docs();
 
-            BiWordIndex bi = new BiWordIndex();
+            List<string> documents = new List<string>();
+            foreach (var i in dict)
+            {
+                documents.Add(i.Value);
+            }
 
-            bi.AddDocuments(documents);
+            // Create bi-word index
+            Dictionary<string, List<int>> biwordIndex = new Dictionary<string, List<int>>();
+            for (int i = 0; i < documents.Count; i++)
+            {
+                string[] words = documents[i].Split(new char[] { ' ', '.', ',', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
+                for (int j = 0; j < words.Length - 1; j++)
+                {
+                    string biword = words[j] + " " + words[j + 1];
+                    if (!biwordIndex.ContainsKey(biword))
+                    {
+                        biwordIndex[biword] = new List<int>();
+                    }
+                    biwordIndex[biword].Add(i);
+                }
+            }
 
-            List<int> l = bi.Search(searchtext);
+            // Search for a bi-word and return document IDs
+            string biwordQuery = t;
+            if (biwordIndex.ContainsKey(biwordQuery))
+            {
+                List<int> docIDs = biwordIndex[biwordQuery];
+                ViewBag.result = docIDs;
+            }
+      
 
-            ViewBag.result = l;
-            ViewBag.word = searchtext;
+            ViewBag.word = t;
             return View();
         }
 
