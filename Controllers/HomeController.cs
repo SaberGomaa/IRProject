@@ -13,9 +13,19 @@ namespace IRProject.Controllers
             _logger = logger;
             _environment = environment;
         }
+        //public IActionResult Index()
+        //{
+        //    return RedirectToAction("indexing" , "indexing");
+        //}
+
         public IActionResult Index()
         {
-            return RedirectToAction("indexing" , "indexing");
+            return RedirectToAction("Welcome");
+        }
+
+        public IActionResult Welcome()
+        {
+            return View();
         }
 
         public IActionResult Searching()

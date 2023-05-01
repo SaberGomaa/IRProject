@@ -26,7 +26,6 @@ namespace IRProject.Controllers
 
             indexingQRY indexingQRY = new indexingQRY();
 
-            
             string dirPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\lucene";
 
             Operations op = new Operations();
