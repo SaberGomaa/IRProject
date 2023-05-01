@@ -238,10 +238,8 @@ class indexingQRY
     public Dictionary<int, string> docs()
     {
         string dirPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section\\CISI.QRY";
-        string dirPath2 = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section\\CISI.ALL";
 
         string text = File.ReadAllText(dirPath);
-        text += File.ReadAllText(dirPath2);
 
         string[] files = new string[] { };
 
@@ -266,13 +264,10 @@ class indexingQRY
                 }
                 if (s != "")
                     l.Add(int.Parse(s));
-
             }
             dict.Add(c++, file);
-
         }
         return dict;
     }
-
 }
 

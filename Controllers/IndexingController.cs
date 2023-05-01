@@ -83,10 +83,8 @@ class allPre
         Preprocessing preprocessing = new Preprocessing();
 
         string dirPath = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section\\CISI.QRY";
-        string dirPath2 = "c:\\users\\saber\\onedrive - computer and information technology (menofia university)\\desktop\\ir\\irproject\\wwwroot\\attaches\\documents\\documents\\section\\CISI.ALL";
 
         string text = System.IO.File.ReadAllText(dirPath);
-        text += System.IO.File.ReadAllText(dirPath2);
 
         string[] files = new string[] { };
 

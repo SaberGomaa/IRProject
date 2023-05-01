@@ -15,6 +15,10 @@
     </thead>    
     @foreach (KeyValuePair<string, int> termIndex in ViewBag.terms)
     {
+        @if (termIndex.Key[0] >= '0' && termIndex.Key[0] <= '9')
+        {
+            continue;
+        }
         <tr>
             <td>@termIndex.Key</td>
             @for (int j = 0; j < ViewBag.docsCount; j++)
