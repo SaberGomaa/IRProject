@@ -11,16 +11,42 @@
 }
 
 <h1 class="text-center">Search Using Positional Index</h1>
-@if (c > 0)
-{
-        <h1 class="text-center">Documents Which Contain '@ViewBag.word' Word  </h1>
-}
+<hr />
+<h1 class="text-center"> Operations  </h1>
 <hr />
 
-@foreach (var r in ViewBag.result)
+@foreach (var o in ViewBag.operations)
 {
-        <h1 class="text-center"> Document @r</h1>
-    c++;
+    <h5 class="text-center">@o</h5>
+}
+<hr />
+@if (c > 0)
+{
+<table class="table table-hover text-xl-center">
+        <thead>
+            <tr>
+                <th>Documents Name That Contain '@ViewBag.word' Word </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                c = 0;
+            }
+            @foreach (var i in ViewBag.result)
+            {
+                c++;
+                <tr>
+                    <td>Document @(i-1)</td>
+                </tr>
+            }
+            @if (c > 0)
+            {
+                <tr>
+                    <td>Number Of Documents Which Have '@ViewBag.word' Word = @c</td>
+                </tr>
+            }
+        </tbody>
+    </table> 
 }
 @if (c == 0)
 {

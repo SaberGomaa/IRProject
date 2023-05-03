@@ -9,6 +9,16 @@ namespace IRProject.Controllers
         public IActionResult Index(string t,List<string> searchtext, string boolWords, string tok, string norm, string lemm, string stops, string stem)
         {
 
+            List<string> operations = new List<string>();
+            if (tok == "on") operations.Add("Tokenization");
+            if (norm == "on") operations.Add("Normalization");
+            if (stops == "on") operations.Add("Remove Stop Words");
+            if (lemm == "on") operations.Add("Lemmetization");
+            if (stem == "on") operations.Add("Stemming");
+            norm = "on";
+            stem = "on";
+            ViewBag.operations = operations;
+
             string operators = boolWords;
 
             RemoveStopWords x = new RemoveStopWords();

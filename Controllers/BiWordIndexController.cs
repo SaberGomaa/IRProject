@@ -8,6 +8,16 @@ namespace IRProject.Controllers
         {
             indexingQRY indexingQRY = new indexingQRY();
 
+            List<string> operations = new List<string>();
+            if (tok == "on") operations.Add("Tokenization");
+            if (norm == "on") operations.Add("Normalization");
+            if (stops == "on") operations.Add("Remove Stop Words");
+            if (lemm == "on") operations.Add("Lemmetization");
+            if (stem == "on") operations.Add("Stemming");
+
+            ViewBag.operations = operations;
+            norm = "on";
+            stem = "on";
             allPre a = new allPre();
             var dict = a.Indexing("invert", tok, norm, lemm, stops, stem);
 
@@ -32,9 +42,19 @@ namespace IRProject.Controllers
                     biwordIndex[biword].Add(i);
                 }
             }
-
+            Preprocessing preprocessing = new Preprocessing();
+            string biwordQuery = " ";
+            biwordQuery = t;
             // Search for a bi-word and return document IDs
-            string biwordQuery = t;
+            if (lemm=="on" || stem=="on") 
+            {
+                biwordQuery = preprocessing.StemmingOneDocument(biwordQuery);
+            }
+
+            if (biwordQuery[^1] == ' ')
+            {
+                biwordQuery = biwordQuery.Remove(biwordQuery.Length - 1);
+            }
             if (biwordIndex.ContainsKey(biwordQuery))
             {
                 List<int> docIDs = biwordIndex[biwordQuery];

@@ -8,10 +8,22 @@
 
 
 <h1 class="text-center">Search Using Inverted Index</h1>
+<hr/>
+<h1 class="text-center"> Operations  </h1>
+<hr />
+
+@foreach (var o in ViewBag.operations)
+{
+    <h5 class="text-center">@o</h5>
+}
+<hr />
+
 <h1 class="text-center">Documents Which Contain '@ViewBag.word' Word  </h1>
 
 <table class="table tab-content">
-   
+   @{
+       c= 0 ;
+   }
     @foreach (var i in ViewBag.results)
     {
         <tr class="w-100">
@@ -19,6 +31,12 @@
         </tr>
        c++;
     }
+     @if (c > 0)
+            {
+        <tr class="w-100 text-center">
+                    <td>Number Of Documents Which Have '@ViewBag.word' Word = @c</td>
+                </tr>
+            }
     
 </table>
 @if (c == 0)

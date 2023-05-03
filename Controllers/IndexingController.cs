@@ -50,9 +50,12 @@ namespace IRProject.Controllers
 
                 if(stem == "on")
                 {
-                    result = preprocessing.StemOneDocument(result);
+                    result = preprocessing.StemmingOneDocument(result);
                 }
-
+                if (stem == "on")
+                {
+                    result = preprocessing.StemmingOneDocument(result);
+                }
                 string s = "";
                 if (file.Length > 0)
                 {
@@ -109,7 +112,7 @@ class allPre
 
             if (stem == "on")
             {
-                result = preprocessing.StemOneDocument(result);
+                result = preprocessing.StemmingOneDocument(result);
             }
 
             string s = "";
@@ -126,7 +129,7 @@ class allPre
                     l.Add(int.Parse(s));
 
             }
-            dict.Add(c++, file);
+            dict.Add(c++, result);
 
         }
 
@@ -138,7 +141,7 @@ class Preprocessing
 {
     List<string> documents = new List<string>();
 
-    public string StemOneDocument(string document)
+    public string StemmingOneDocument(string document)
     {
 
         string text = document;
@@ -159,6 +162,29 @@ class Preprocessing
 
         return result;
     }
+
+
+    public string Lemmatization(string document)
+    {
+
+        string text = document;
+        var Lemmatization = new EnglishPorter2Stemmer();
+        string[] words = text.Split(' ');
+        string LemmatizationText = string.Empty;
+
+        foreach (string word in words)
+        {
+            word.ToLower();
+            if (word.Length > 0)
+            {
+                LemmatizationText += Lemmatization.Stem(word).Value + " ";
+            }
+        }
+        string result = LemmatizationText;
+
+        return result;
+    }
+
 
     public string StopWords(string d)
     {

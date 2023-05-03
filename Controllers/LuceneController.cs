@@ -38,35 +38,6 @@ namespace IRProject.Controllers
             IndexWriterConfig iwc = new IndexWriterConfig(LuceneVersion.LUCENE_48, analyzer);
             IndexWriter iw = new IndexWriter(dir, iwc);
 
-            // Add documents from directory
-            //foreach (string file in System.IO.Directory.GetFiles(dirPath, "CISI*"))
-            //{
-            //    Document doc = new Document();
-            //    string text = System.IO.File.ReadAllText(file);
-            //    string output = text;
-
-            //    //if(tok == "on")
-            //    //{
-            //    //    output = stopWords.GetTermsForOneDocument(output);
-            //    //}
-            //    //if(norm == "on")
-            //    //{
-            //    //    output = stopWords.NormalizeOneDocument(output);
-            //    //}
-            //    //if(stem == "on")
-            //    //{
-            //    //    output =  op.StemOneDocument(output);
-            //    //}
-            //    //if (stops == "on")
-            //    //{
-            //    //    output = stopWords.StopWordsOneDocumentLucene(output);
-            //    //}
-            //    doc.Add(new TextField("content", text, Field.Store.YES));
-            //    doc.Add(new TextField("filename", Path.GetFileName(file), Field.Store.YES));
-
-            //    iw.AddDocument(doc);
-            //}
-
             foreach (var file in dict)
             {
                 Document doc = new Document();
