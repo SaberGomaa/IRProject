@@ -70,7 +70,7 @@ namespace IRProject.Controllers
             }
             else if (selected == "position")
             {
-                return RedirectToAction("index", "PositionalIndex", new { t = searchtext, searchtext = searchtext, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
+                return RedirectToAction("index", "PositionalIndex", new { t = searchtext, searchtext = strings, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
             }
             else if (selected == "biword")
             {
