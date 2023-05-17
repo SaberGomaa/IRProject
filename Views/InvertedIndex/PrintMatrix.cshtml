@@ -1,10 +1,10 @@
-﻿@*
-@{
+﻿@*@{
     Layout = null;
 
 }
 <table>
-    <tr> @foreach (var kvp in ViewBag.index)
+    <tr> 
+        @{foreach (var kvp in ViewBag.index)
             {
                 foreach(var y in kvp){
                 <td>@kvp.Key</td>
@@ -12,7 +12,7 @@
                 {
                     <td>@docId</td>               
                 }
-            }
+                }  }
     </tr>
 
 </table>

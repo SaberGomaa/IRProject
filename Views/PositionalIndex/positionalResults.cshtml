@@ -1,0 +1,31 @@
+﻿
+@{
+    Layout = null;
+    Dictionary<string, List<(int DocumentId, int WordIndex)>> positionalIndex = ViewBag.indexes;
+}
+
+
+
+@foreach (var documentId in ViewBag.docs)
+{
+    <h1>Doc @documentId</h1>
+}
+
+<table>
+@foreach (string word in positionalIndex.Keys)
+{
+        if (word.Length < 2) continue;
+        <tr>
+        <td>@word</td>
+            @{
+                List<(int DocumentId, int WordIndex)> occurrences = positionalIndex[word];
+            }
+            @foreach (var occurrence in occurrences)
+            {
+                <td> (@occurrence.DocumentId:@occurrence.WordIndex)</td>
+                
+            }
+        </tr>
+}
+</table>
+

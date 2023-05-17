@@ -70,7 +70,7 @@ namespace IRProject.Controllers
                         l.Add(int.Parse(s));
 
                 }
-                dict.Add(c++, file);
+                dict.Add(c++, result);
 
             }
 
@@ -101,10 +101,9 @@ class allPre
         foreach (string file in files)
         {
             string result = file;
-            if (stops == "on")
-            {
-                result = preprocessing.StopWords(file);
-            }
+          
+            result = preprocessing.StopWords(file);
+            
             if (norm == "on")
             {
                 result = preprocessing.NormalizeOneDocument(file);
@@ -268,7 +267,7 @@ class Preprocessing
         foreach (string t in terms)
         {
             string pattern = "[\r\n]";
-            string output1 = Regex.Replace(t, pattern, "");
+            string output1 = Regex.Replace(t, pattern, " ");
             string p = "\\s+";
             string output2 = Regex.Replace(output1, p, " ");
 

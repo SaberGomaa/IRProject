@@ -13,6 +13,7 @@ namespace IRProject.Controllers
             _logger = logger;
             _environment = environment;
         }
+
         //public IActionResult Index()
         //{
         //    return RedirectToAction("indexing" , "indexing");
@@ -37,7 +38,6 @@ namespace IRProject.Controllers
         public IActionResult Searching(string searchtext, string selected, string tok, string norm, string lemm, string stops, string stem)
         {
 
-
             List<string> searchtexts = searchtext.ToLower().Split(' ').ToList();
 
             List<string> strings= new List<string>();
@@ -45,6 +45,7 @@ namespace IRProject.Controllers
 
             foreach(var i in searchtexts)
             {
+
                 if(i == "and" || i == "or" || i == "not")
                 {
                     boolWords = i;
@@ -57,7 +58,7 @@ namespace IRProject.Controllers
 
             if (selected == "lucene")
             {
-                return RedirectToAction("Searching", "lucene", new {t= searchtext , searchtext = strings , boolwords = boolWords, tok = tok, norm = norm, lemm = lemm , stops = stops , stem = stem});
+                return RedirectToAction("index", "InvertedIndex", new {t= searchtext , searchtext = strings , boolwords = boolWords, tok = tok, norm = norm, lemm = lemm , stops = stops , stem = stem});
             }
             else if(selected == "term") 
             {

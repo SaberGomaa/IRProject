@@ -1,6 +1,7 @@
 ﻿@{
     Layout = null;
     int c = 0;
+    Dictionary<string, Dictionary<int, List<int>>> index = ViewBag.pos;
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -53,6 +54,30 @@
         <h1 class="text-center"> No Documents Contain '@ViewBag.word' Word </h1>
 
 }
+<table>
+    <thead>
+        <td>Word</td>
+        <td>Document Id</td>
+    </thead>
+    @foreach(var i in index)
+{
+        if(i.Key.Length <= 3)
+        {
+            continue;
+        }
+        <tr>
+    <td>@i.Key </td>
+    @foreach(var j in i.Value)
+    {
+        <td>@j.Key</td>
+        foreach(var k in j.Value)
+        {
+            <td> @k </td>            
+        }
+    }
+        </tr>
+}
+</table>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

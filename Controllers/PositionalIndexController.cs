@@ -1,9 +1,66 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using org.apache.xmlbeans.impl.xb.xsdschema;
 
 namespace IRProject.Controllers
 {
     public class PositionalIndexController : Controller
     {
+        Dictionary<string, List<(int DocumentId, int WordIndex)>> positionalIndex = new Dictionary<string, List<(int, int)>>();
+
+        public IActionResult PositionalResults() 
+		{
+            List<string> documents = new List<string>();
+
+            indexingQRY ind = new indexingQRY();
+
+			Preprocessing  p = new Preprocessing();
+
+            var r = ind.docs();
+
+            foreach (var doc in r)
+            {
+                documents.Add(p.StopWords(p.NormalizeOneDocument(doc.Value)).ToLower());
+            }
+
+            for (int i = 0; i < documents.Count; i++)
+            {
+                string[] words = documents[i].Split(' ');
+
+                for (int j = 0; j < words.Length; j++)
+                {
+                    string word = words[j];
+
+                    if (!positionalIndex.ContainsKey(word))
+                    {
+                        positionalIndex[word] = new List<(int, int)>();
+                    }
+
+                    positionalIndex[word].Add((i, j));
+                }
+            }
+
+			ViewBag.indexes = positionalIndex;
+
+            string searchWord = "approximate";
+            HashSet<int> docsIDs = new HashSet<int>();
+            if (positionalIndex.ContainsKey(searchWord))
+            {
+                Console.WriteLine($"Word '{searchWord}' appears in the following documents:");
+
+                List<(int docID, int index)> documentIds = positionalIndex[searchWord];
+
+                foreach (var documentId in documentIds)
+                {
+                    docsIDs.Add(documentId.docID);
+                }
+            }
+
+            ViewBag.docs = docsIDs;
+
+			return View();
+
+        }
+
         public IActionResult Index(string t, List<string> searchtext, string boolWords, string tok, string norm, string lemm, string stops, string stem)
         {
             List<string> operations = new List<string>();
@@ -18,11 +75,12 @@ namespace IRProject.Controllers
 
             ViewBag.operations = operations;
             indexingQRY indexingQRY = new indexingQRY();
-
+			stops = "on";
             allPre a = new allPre();
             var dict = a.Indexing("lucene", tok, norm, lemm, stops, stem);
 
 			PositionalIndex index = new PositionalIndex();
+			var x = index.index;
 
 			Preprocessing preprocessing = new Preprocessing();
 
@@ -39,17 +97,26 @@ namespace IRProject.Controllers
 
 			string[] s = t.Split(' ');
 
-			//string[] s = new string[2];
+            //string[] s = new string[2];
 
-			//for (int i = 0; i < searchtext.Count; i++)
-			//{
-			//	s[i] = searchtext[i];
-			//}
+            //for (int i = 0; i < searchtext.Count; i++)
+            //{
+            //	s[i] = searchtext[i];
+            //}
+
+            List<int> results = new List<int>();
 
 
-			List<int> results = index.Search(s);
+            if (t.Length > 4)
+			{
+				results = index.Search(s);
+			}
+			else
+			{
+                results = new List<int> ();
+            }
 
-
+			ViewBag.pos = x; 
 
 			ViewBag.result = results;
             ViewBag.word = t;
@@ -60,9 +127,11 @@ namespace IRProject.Controllers
 }
 
 
+
+
 public class PositionalIndex
 {
-	private Dictionary<string, Dictionary<int, List<int>>> index;
+	public Dictionary<string, Dictionary<int, List<int>>> index;
 
 	public PositionalIndex()
 	{
