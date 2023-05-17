@@ -106,7 +106,7 @@ class allPre
             
             if (norm == "on")
             {
-                result = preprocessing.NormalizeOneDocument(file);
+                result = preprocessing.NormalizeOneDocument(result);
             }
 
             if (stem == "on")
@@ -187,7 +187,7 @@ class Preprocessing
 
     public string StopWords(string d)
     {
-        HashSet<string> stopWords = new HashSet<string> { "the", "and", "a", "of", "an", "as", "with", "at", "yes", "yet", "you" };
+        HashSet<string> stopWords = new HashSet<string> { "the", "and", "a", "of", "an", "as", "with", "at", "yes", "yet", "you" ,"are" , "is" };
         string ReTerms = "";
 
         string[] documents = d.Split(' ');

@@ -18,6 +18,7 @@ namespace IRProject.Controllers
             ViewBag.operations = operations;
             norm = "on";
             stem = "on";
+            stops = "on";
             allPre a = new allPre();
             var dict = a.Indexing("invert", tok, norm, lemm, stops, stem);
 
