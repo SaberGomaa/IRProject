@@ -42,6 +42,9 @@ namespace IRProject.Controllers
                     biwordIndex[biword].Add(i);
                 }
             }
+
+            ViewBag.biword = biwordIndex;
+
             Preprocessing preprocessing = new Preprocessing();
             string biwordQuery = " ";
             biwordQuery = t;

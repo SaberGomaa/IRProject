@@ -10,6 +10,8 @@
     c++;
 }*@
 
+
+
 @if (ViewBag.result is null)
 {
     <h1 class="text-center"> No Documents Contain '@ViewBag.word' Word </h1>
@@ -49,6 +51,10 @@ else{
         </tbody>
     </table> 
  
+}
+@foreach (var i in ViewBag.biword)
+{
+    <p>@i.Key</p>
 }
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
