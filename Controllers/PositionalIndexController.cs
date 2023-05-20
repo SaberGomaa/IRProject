@@ -7,7 +7,7 @@ namespace IRProject.Controllers
     {
         Dictionary<string, List<(int DocumentId, int WordIndex)>> positionalIndex = new Dictionary<string, List<(int, int)>>();
 
-        public IActionResult PositionalResults() 
+        public IActionResult PositionalResults(string t, List<string> searchtext, string boolWords, string tok, string norm, string lemm, string stops, string stem) 
 		{
             List<string> documents = new List<string>();
 
@@ -41,7 +41,7 @@ namespace IRProject.Controllers
 
 			ViewBag.indexes = positionalIndex;
 
-            string searchWord = "approximate";
+            string searchWord = "what";
             HashSet<int> docsIDs = new HashSet<int>();
             if (positionalIndex.ContainsKey(searchWord))
             {
@@ -54,6 +54,8 @@ namespace IRProject.Controllers
                     docsIDs.Add(documentId.docID);
                 }
             }
+
+			ViewBag.word = t;
 
             ViewBag.docs = docsIDs;
 

@@ -109,10 +109,8 @@ class allPre
                 result = preprocessing.NormalizeOneDocument(result);
             }
 
-            if (stem == "on")
-            {
-                result = preprocessing.StemmingOneDocument(result);
-            }
+            result = preprocessing.StemmingOneDocument(result);
+            
 
             string s = "";
             if (file.Length > 0)

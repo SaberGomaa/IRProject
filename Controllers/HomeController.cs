@@ -38,6 +38,12 @@ namespace IRProject.Controllers
         public IActionResult Searching(string searchtext, string selected, string tok, string norm, string lemm, string stops, string stem)
         {
 
+            Preprocessing preprocessing = new Preprocessing();
+            //if(stem == "on")
+            //{
+            //    searchtext = preprocessing.StemmingOneDocument(searchtext)  ;
+            //}
+
             List<string> searchtexts = searchtext.ToLower().Split(' ').ToList();
 
             List<string> strings= new List<string>();
@@ -71,7 +77,7 @@ namespace IRProject.Controllers
             }
             else if (selected == "position")
             {
-                return RedirectToAction("index", "PositionalIndex", new { t = searchtext, searchtext = strings, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
+                return RedirectToAction("PositionalResults", "PositionalIndex", new { t = searchtext, searchtext = strings, boolwords = boolWords, norm = norm, lemm = lemm, stops = stops, stem = stem });
             }
             else if (selected == "biword")
             {

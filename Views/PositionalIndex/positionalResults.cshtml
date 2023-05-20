@@ -5,10 +5,13 @@
 }
 
 
+<h1 class="text-center" style="text-align:center">Documents Which Contain '@ViewBag.word' Word</h1>
+<hr />
 
 @foreach (var documentId in ViewBag.docs)
 {
-    <h1>Doc @documentId</h1>
+    <h3 class="text-center" style="text-align:center">Doc @documentId</h3>
+    <hr />
 }
 
 <table>
